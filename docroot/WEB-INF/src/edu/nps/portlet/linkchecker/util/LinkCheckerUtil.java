@@ -9,10 +9,17 @@ import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
+import com.liferay.portlet.wiki.model.WikiNode;
+import com.liferay.portlet.wiki.model.WikiPage;
+import com.liferay.portlet.wiki.model.WikiPageConstants;
+import com.liferay.portlet.wiki.model.WikiPageDisplay;
+import com.liferay.portlet.wiki.service.WikiNodeLocalServiceUtil;
+import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
 import com.liferay.util.HTMLParser;
 
 import edu.nps.portlet.linkchecker.util.ContentLinks;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -21,7 +28,21 @@ import java.util.List;
 
 public class LinkCheckerUtil {
 
-	public static List<ContentLinks> getWebContentLinks(long groupId, String languageId, ThemeDisplay themeDisplay)
+	public static List<ContentLinks> getContentLinks(String contentType, long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
+		throws Exception {
+
+		if (contentType.equals("web-content")) {
+			return getWebContentLinks(groupId, languageId, themeDisplay, getLinks, getImages);
+		}
+		else if (contentType.equals("wiki-pages")) {
+			return getWikiContentLinks(groupId, languageId, themeDisplay, getLinks, getImages);
+		}
+		else {
+			return null;
+		}
+	}
+
+	public static List<ContentLinks> getWebContentLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
 		throws Exception {
 
 		_log.info("getWebContentLinks for groupId " + String.valueOf(groupId));
@@ -47,11 +68,8 @@ public class LinkCheckerUtil {
 
 				if (content != null) {
 
-					Reader contentReader = new StringReader(content);
-					List<String> links = new HTMLParser(contentReader).getLinks();
-					
-					cleanLinks(links);
-					
+					List<String> links = parseLinks(content, getLinks, getImages);
+
 					if (links.size() > 0) {
 
 						editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.JOURNAL) + "articleId", journalArticle.getArticleId());
@@ -80,7 +98,88 @@ public class LinkCheckerUtil {
 		return contentLinksList;
 	}
 
-	private static void cleanLinks(List<String> links){
+	public static List<ContentLinks> getWikiContentLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
+		throws Exception {
+
+		_log.info("getWikiContentLinks for groupId " + String.valueOf(groupId));
+
+		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
+
+		List<WikiNode> wikiNodeList = WikiNodeLocalServiceUtil.getNodes(groupId);
+
+		List<WikiPage> wikiPageList = new ArrayList<WikiPage>(); //= WikiPageLocalServiceUtil.getPages(WikiPageConstants.DEFAULT_FORMAT);
+
+		for (WikiNode wikiNode : wikiNodeList) {
+
+			wikiPageList.addAll(WikiPageLocalServiceUtil.getPages(wikiNode.getNodeId(), true, 0, WikiPageLocalServiceUtil.getPagesCount(wikiNode.getNodeId(), true)));
+		}
+
+		String editLink = themeDisplay.getURLControlPanel();
+		editLink = HttpUtil.setParameter(editLink, "p_p_id", PortletKeys.WIKI_ADMIN);
+		editLink = HttpUtil.setParameter(editLink, "p_p_lifecycle", "0");
+		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
+		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.JOURNAL) + "struts_action", "/journal/edit_article");
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.JOURNAL) + "redirect", themeDisplay.getURLCurrent());
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.JOURNAL) + "groupId", groupId);
+
+		for (WikiPage wikiPage : wikiPageList) {
+
+			String content = wikiPage.getContent();
+			
+			//WikiPageDisplay pageDisplay = WikiPageLocalServiceUtil.getPageDisplay(page, viewPageURL, editPageURL, attachmentURLPrefix);
+
+			if (content != null && wikiPage.getFormat().equals("html")) {
+
+				List<String> links = parseLinks(content, getLinks, getImages);
+
+				if (links.size() > 0) {
+
+					editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.WIKI_ADMIN) + "pageId", wikiPage.getPageId());
+
+					ContentLinks contentLinks = new ContentLinks();
+					contentLinks.setClassName(wikiPage.getModelClassName());
+					contentLinks.setClassPK(String.valueOf(wikiPage.getPageId()));
+					contentLinks.setContentTitle(wikiPage.getTitle());
+					contentLinks.setContentEditLink(editLink);
+					contentLinks.setModifiedDate(wikiPage.getModifiedDate());
+					contentLinks.setStatus(wikiPage.getStatus());
+					
+					_log.debug("Extracting links from wiki page " + wikiPage.getPageId() + " - " + wikiPage.getTitle());
+					
+					for (String link : links) {
+
+						contentLinks.addLink(link);
+					}
+					
+					contentLinksList.add(contentLinks);
+				}
+			}
+		}
+
+		return contentLinksList;
+	}
+
+	public static List<String> parseLinks(String content, boolean getLinks, boolean getImages)
+		throws IOException {
+
+		List<String> links = new ArrayList<String>();
+
+		Reader contentReader = new StringReader(content);
+		HTMLParser htmlParser = new HTMLParser(contentReader);
+
+		if (getLinks)
+			links.addAll(htmlParser.getLinks());
+
+		if (getImages)
+			links.addAll(htmlParser.getImages());
+
+		cleanLinks(links);
+
+		return links;
+	}
+
+	private static void cleanLinks(List<String> links) {
 
 		Iterator<String> linksIterator = links.iterator();
 

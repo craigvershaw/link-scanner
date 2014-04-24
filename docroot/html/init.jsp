@@ -59,6 +59,6 @@ String rootPortletId = portletDisplay.getRootPortletId();
 
 String templatePath = portletConfig.getInitParameter("template-path");
 
-String languagId = themeDisplay.getLanguageId();
+String languageId = themeDisplay.getLanguageId();
 
 %>
