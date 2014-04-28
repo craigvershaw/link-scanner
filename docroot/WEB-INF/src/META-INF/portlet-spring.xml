@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	<bean id="edu.nps.portlet.linkchecker.service.LinkCheckerURLStatusLocalService" class="edu.nps.portlet.linkchecker.service.impl.LinkCheckerURLStatusLocalServiceImpl" />
+	<bean id="edu.nps.portlet.linkchecker.service.LinkCheckerURLStatusService" class="edu.nps.portlet.linkchecker.service.impl.LinkCheckerURLStatusServiceImpl" />
+</beans>
