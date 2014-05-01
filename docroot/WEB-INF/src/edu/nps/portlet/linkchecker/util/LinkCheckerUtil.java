@@ -90,7 +90,7 @@ public class LinkCheckerUtil {
 
 		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
 
-		List<JournalArticle> journalArticleList = JournalArticleLocalServiceUtil.getArticles(groupId, 1, 1000);
+		List<JournalArticle> journalArticleList = JournalArticleLocalServiceUtil.getArticles(groupId);
 
 		String editLink = themeDisplay.getURLControlPanel();
 		editLink = HttpUtil.setParameter(editLink, "p_p_id", PortletKeys.JOURNAL);
