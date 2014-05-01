@@ -1,7 +1,7 @@
 <%@ include file="/html/init.jsp" %>
 
 <p>
-	Select the content types to process for links.</p>
+	Select the content type to process for links.</p>
 
 <liferay-portlet:renderURL varImpl="extractLinksURL">
 	<portlet:param name="mvcPath" value='<%= templatePath + "checker.jsp" %>' />
@@ -27,7 +27,7 @@
 		</aui:field-wrapper>
 
 		<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" id="linkCheckerAdvanced" persistState="<%= true %>" title="advanced">
-			<aui:input inlineLabel="right" name="check-links" type="checkbox" />
+			<aui:input inlineLabel="right" name="check-links" type="checkbox" checked="<%= true %>" />
 			<aui:input inlineLabel="right" name="check-images" type="checkbox" />
 		</liferay-ui:panel>
 

@@ -78,7 +78,7 @@ List<ContentLinks> contentLinksList = LinkCheckerUtil.getContentLinks(contentTyp
 %>
 					<tr class="link-checker-row-link results-row <%= (rowAlt?"portlet-section-alternate alt":"portlet-section-body") %>">
 						<td class="align-left col-1 first valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-result">
-							<div class="link-checker-result link-checker-unchecked" data-link="<%= link %>"></div>
+							<div class="link-checker-result link-checker-unchecked" title="" data-link="<%= link %>" data-isportal="<%= LinkCheckerUtil.isPortalLink(link, themeDisplay) %>"></div>
 						</td>
 						<td class="align-left col-2 valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-title-link">
 							<a href="<%= link %>" target="_blank" class="link-checker-link"><%= linkShort %></a>
@@ -105,28 +105,74 @@ List<ContentLinks> contentLinksList = LinkCheckerUtil.getContentLinks(contentTyp
 			var links = A.all('.link-checker-result');
 
 			links.each(function (node) {
-				A.io.request(
-					node.attr('data-link'),
-					{
-						on: {
-							failure: function(event, id, obj) {
-								node.removeClass('link-checker-unchecked');
-								node.removeClass('link-checker-success');
-								node.addClass('link-checker-error');
-							},
-							success: function(event, id, obj) {
-								node.removeClass('link-checker-unchecked');
-								node.removeClass('link-checker-error');
-								node.addClass('link-checker-success');
+				if (node.attr('data-isportal') == 'true') {
+					A.io.request(
+						node.attr('data-link'),
+						{
+							on: {
+								failure: function(event, id, obj) {
+									node.removeClass('link-checker-unchecked');
+									node.removeClass('link-checker-success');
+									node.addClass('link-checker-error');
+									node.attr('title','XMLRPC Failed');
+								},
+								success: function(event, id, obj) {
+									node.removeClass('link-checker-unchecked');
+									node.removeClass('link-checker-error');
+									node.addClass('link-checker-success');
+									node.attr('title','XMLRPC Success');
+								}
 							}
 						}
-					}
-				);
+					);
+				} else {
+					encodelink=encodeURIComponent(node.attr('data-link'));
+					A.io.request(
+						'/api/jsonws/link-checker-portlet.linkcheckerurlstatus/get-response?url=' + encodelink,
+						{
+							dataType: 'json',
+							on: {
+								failure: function(event, id, obj) {
+									node.removeClass('link-checker-unchecked');
+									node.removeClass('link-checker-success');
+									node.addClass('link-checker-error');
+									node.attr('title','Web Service Request Failed');
+								},
+								success: function(event, id, obj) {
+									var response = this.get('responseData');
+									var exception = response.exception;
+									
+									if (response[0] == 200) {
+										node.removeClass('link-checker-unchecked');
+										node.removeClass('link-checker-error');
+										node.addClass('link-checker-success');
+									} else {
+										node.removeClass('link-checker-unchecked');
+										node.removeClass('link-checker-success');
+										node.addClass('link-checker-error');
+									}
+									node.attr('title','WS: ' + response[0] + ' - ' + response[1]);
+								}
+							}
+						}
+					);
+				}
 			});
 		},
 		['aui-io']
 	);
 
 	<portlet:namespace />checkLinks();
+
+	AUI().ready('aui-tooltip', 'aui-io-plugin', function(A) {
+	
+		var tipresult = new A.Tooltip({
+			trigger: '.link-checker-result',
+			align: { points: [ 'br', 'tl' ] },
+			title: true
+		})
+		.render();
+	
+	});
 
 </aui:script>

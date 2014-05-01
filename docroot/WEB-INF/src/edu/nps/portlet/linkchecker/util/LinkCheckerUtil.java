@@ -1,8 +1,14 @@
 package edu.nps.portlet.linkchecker.util;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
@@ -24,9 +30,44 @@ import java.io.StringReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import javax.portlet.PortletPreferences;
 
 public class LinkCheckerUtil {
+
+	public static Set<String> getPortalURLPrefixes(ThemeDisplay themeDisplay)
+		throws SystemException, PortalException {
+
+		Set<String> portalURLPrefixes = new HashSet<String>();
+		portalURLPrefixes.add(themeDisplay.getURLPortal());
+		portalURLPrefixes.add("/");
+		// TODO: protocol relative urls that begin with //
+
+		PortletPreferences preferences = getPreferences(themeDisplay.getCompanyId());
+
+		String portalPrefixesAdd = preferences.getValue(
+			"portalPrefixesAdd", StringPool.BLANK);
+
+		if (Validator.isNotNull(portalPrefixesAdd)) {
+			portalURLPrefixes.addAll(ListUtil.fromString(portalPrefixesAdd));
+		}
+
+		return portalURLPrefixes;
+	}
+
+	public static PortletPreferences getPreferences(long companyId) 
+		throws SystemException, PortalException {
+
+		int ownerType = PortletKeys.PREFS_OWNER_TYPE_COMPANY;
+		long plid = PortletKeys.PREFS_PLID_SHARED;
+
+		return PortletPreferencesLocalServiceUtil.getPreferences(
+			companyId, companyId, ownerType, plid, LINK_CHECKER_DISPLAY);
+
+	}
 
 	public static List<ContentLinks> getContentLinks(String contentType, long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
 		throws Exception {
@@ -160,6 +201,18 @@ public class LinkCheckerUtil {
 		return contentLinksList;
 	}
 
+	public static boolean isPortalLink(String url, ThemeDisplay themeDisplay)
+		throws SystemException, PortalException {
+
+		for (String portalURLPrefix : getPortalURLPrefixes(themeDisplay)) {
+
+			if (url.startsWith(portalURLPrefix))
+				return true;
+		}
+		
+		return false;
+	}
+
 	public static List<String> parseLinks(String content, boolean getLinks, boolean getImages)
 		throws IOException {
 
@@ -195,6 +248,8 @@ public class LinkCheckerUtil {
 			}
 		}
 	}
+
+	private static final String LINK_CHECKER_DISPLAY = "linkchecker_WAR_linkcheckerportlet";
 
 	private static Log _log = LogFactoryUtil.getLog(LinkCheckerUtil.class);
 
