@@ -142,16 +142,31 @@ List<ContentLinks> contentLinksList = LinkCheckerUtil.getContentLinks(contentTyp
 									var response = this.get('responseData');
 									var exception = response.exception;
 									
-									if (response[0] == 200) {
-										node.removeClass('link-checker-unchecked');
-										node.removeClass('link-checker-error');
-										node.addClass('link-checker-success');
+									if (!exception) {
+										if (response[0] >= 100 && response[0] < 300) {
+											node.removeClass('link-checker-unchecked');
+											node.removeClass('link-checker-error');
+											node.removeClass('link-checker-redirect');
+											node.addClass('link-checker-success');
+										} else if (response[0] >= 300 && response[0] < 400) {
+											node.removeClass('link-checker-unchecked');
+											node.removeClass('link-checker-error');
+											node.removeClass('link-checker-success');
+											node.addClass('link-checker-redirect');
+										} else {
+											node.removeClass('link-checker-unchecked');
+											node.removeClass('link-checker-success');
+											node.removeClass('link-checker-redirect');
+											node.addClass('link-checker-error');
+										}
+										node.attr('title','WS: ' + response[0] + ' - ' + response[1]);
 									} else {
 										node.removeClass('link-checker-unchecked');
 										node.removeClass('link-checker-success');
+										node.removeClass('link-checker-redirect');
 										node.addClass('link-checker-error');
+										node.attr('title','WS: ' + exception);
 									}
-									node.attr('title','WS: ' + response[0] + ' - ' + response[1]);
 								}
 							}
 						}
