@@ -13,6 +13,10 @@
 			<value>/html/display/view.jsp</value>
 		</init-param>
 		<init-param>
+			<name>config-template</name>
+			<value>/html/display/config.jsp</value>
+		</init-param>
+		<init-param>
 			<name>template-path</name>
 			<value>/html/display/</value>
 		</init-param>
@@ -24,6 +28,7 @@
 		<supports>
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
+			<portlet-mode>config</portlet-mode>
 		</supports>
 		<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>

@@ -6,15 +6,14 @@
 	<portlet>
 		<portlet-name>linkchecker</portlet-name>
 		<icon>/icon.png</icon>
-		<control-panel-entry-category>
-			content
-		</control-panel-entry-category>
+		<configuration-action-class>edu.nps.portlet.linkchecker.ConfigurationActionImpl</configuration-action-class>
+		<control-panel-entry-category>content</control-panel-entry-category>
 		<control-panel-entry-weight>80</control-panel-entry-weight>
+		<preferences-company-wide>true</preferences-company-wide>
+		<preferences-unique-per-layout>false</preferences-unique-per-layout>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>linkchecker-portlet</css-class-wrapper>
 	</portlet>
 	<role-mapper>

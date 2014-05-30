@@ -46,16 +46,21 @@ public class LinkCheckerUtil {
 		portalURLPrefixes.add("/");
 		// TODO: protocol relative urls that begin with //
 
-		PortletPreferences preferences = getPreferences(themeDisplay.getCompanyId());
+		String[] portalURLPrefixesAdd = getPortalURLPrefixesAdd(themeDisplay.getCompanyId());
 
-		String portalPrefixesAdd = preferences.getValue(
-			"portalPrefixesAdd", StringPool.BLANK);
-
-		if (Validator.isNotNull(portalPrefixesAdd)) {
-			portalURLPrefixes.addAll(ListUtil.fromString(portalPrefixesAdd));
+		if (Validator.isNotNull(portalURLPrefixesAdd)) {
+			portalURLPrefixes.addAll(ListUtil.fromArray(portalURLPrefixesAdd));
 		}
 
 		return portalURLPrefixes;
+	}
+
+	public static String[] getPortalURLPrefixesAdd(long companyId) 
+		throws SystemException, PortalException {
+
+		PortletPreferences preferences = getPreferences(companyId);
+
+		return preferences.getValues("portalURLPrefixesAdd", new String[0]);
 	}
 
 	public static PortletPreferences getPreferences(long companyId) 
