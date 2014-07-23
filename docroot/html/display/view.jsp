@@ -12,8 +12,8 @@
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:fieldset>
 
-		<aui:field-wrapper name="contentType" label="content-types">
-			<aui:select name="contentType" inlineLabel="right" label="">
+		<aui:field-wrapper name="content-types" label="content-types">
+			<aui:select name="content-type" inlineLabel="right" label="">
 				<aui:option label="web-content" selected="<%= true %>" />
 				<aui:option label="wiki-pages" />
 			</aui:select>
