@@ -60,6 +60,7 @@ public class LinkCheckerURLStatusLocalServiceImpl
 
 			URL urlObject = new URL(url);
 			URLConnection urlConnection = urlObject.openConnection();
+			urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.77.4 (KHTML, like Gecko) Version/7.0.5 Safari/537.77.4");
 		
 			HttpURLConnection.setFollowRedirects(true);
 			HttpURLConnection httpURLConnection = (HttpURLConnection) urlConnection;
