@@ -44,6 +44,7 @@ public class LinkCheckerUtil {
 		Set<String> portalURLPrefixes = new HashSet<String>();
 		portalURLPrefixes.add(themeDisplay.getURLPortal());
 		portalURLPrefixes.add("/");
+		portalURLPrefixes.add(".");
 		// TODO: protocol relative urls that begin with //
 
 		String[] portalURLPrefixesAdd = getPortalURLPrefixesAdd(themeDisplay.getCompanyId());
