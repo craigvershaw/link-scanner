@@ -42,11 +42,8 @@ List<ContentLinks> contentLinksList = LinkCheckerUtil.getContentLinks(contentTyp
 						<th class="col-1 first" id="<portlet:namespace/>SearchContainer_col-result">
 							<span class="result-column-name">Result</span>
 						</th>
-						<th class="col-2" id="<portlet:namespace/>SearchContainer_col-title-link">
+						<th class="col-2 last" id="<portlet:namespace/>SearchContainer_col-title-link">
 							<span class="result-column-name">Title / Link(s)</span>
-						</th>
-						<th class="col-3 last" id="<portlet:namespace/>SearchContainer_col-status">
-							<span class="result-column-name">Status</span>
 						</th>
 					</tr>
 
@@ -57,7 +54,7 @@ List<ContentLinks> contentLinksList = LinkCheckerUtil.getContentLinks(contentTyp
 %>
 					<tr class="link-checker-row-content results-row <%= (rowAlt?"portlet-section-alternate alt":"portlet-section-body") %>">
 						<td class="align-left col-1 first valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-result">&nbsp;</td>
-						<td class="align-left col-2 valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-title-link">
+						<td class="align-left col-2 last valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-title-link">
 							<%= contentLinks.getContentTitle() %>
 							<liferay-ui:icon
 								image="edit"
@@ -65,9 +62,6 @@ List<ContentLinks> contentLinksList = LinkCheckerUtil.getContentLinks(contentTyp
 								target="_blank"
 								url="<%= contentLinks.getContentEditLink() %>"
 							/>
-						</td>
-						<td class="align-left col-3 last valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-status">
-							<%= LanguageUtil.get(pageContext, WorkflowConstants.toLabel(contentLinks.getStatus())) %>
 						</td>
 					</tr>
 <%
@@ -80,10 +74,9 @@ List<ContentLinks> contentLinksList = LinkCheckerUtil.getContentLinks(contentTyp
 						<td class="align-left col-1 first valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-result">
 							<div class="link-checker-result link-checker-unchecked" title="" data-link="<%= link %>" data-isportal="<%= LinkCheckerUtil.isPortalLink(link, themeDisplay) %>"></div>
 						</td>
-						<td class="align-left col-2 valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-title-link">
+						<td class="align-left col-2 last valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-title-link">
 							<a href="<%= link %>" target="_blank" class="link-checker-link"><%= linkShort %></a>
 						</td>
-						<td class="align-left col-3 last valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-status">&nbsp;</td>
 					</tr>
 <%
 		}
