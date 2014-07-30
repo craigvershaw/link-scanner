@@ -16,11 +16,11 @@
 			<aui:select name="content-type" inlineLabel="right" label="">
 				<aui:option label="web-content" selected="<%= true %>" />
 				<aui:option label="wiki-pages" />
+				<aui:option label="rss-portlet-subscriptions" />
 			</aui:select>
 			<!--
 			<aui:input inlineLabel="right" name="calendar-events" type="checkbox" />
 			<aui:input inlineLabel="right" name="message-board-messages" type="checkbox" />
-			<aui:input inlineLabel="right" name="rss-subscriptions" type="checkbox" />
 			<aui:input inlineLabel="right" name="wiki-pages" type="checkbox" />
 			<aui:input inlineLabel="right" name="blog-entries" type="checkbox" />
 			-->

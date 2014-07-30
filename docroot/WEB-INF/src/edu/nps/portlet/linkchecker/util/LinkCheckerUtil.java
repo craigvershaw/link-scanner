@@ -8,10 +8,15 @@ import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.LayoutTypePortlet;
+import com.liferay.portal.model.Portlet;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
+import com.liferay.portal.util.comparator.LayoutComparator;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
@@ -27,8 +32,10 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -82,9 +89,74 @@ public class LinkCheckerUtil {
 		else if (contentType.equals("wiki-pages")) {
 			return getWikiContentLinks(groupId, languageId, themeDisplay, getLinks, getImages);
 		}
+		else if (contentType.equals("rss-portlet-subscriptions")) {
+			return getRSSPortletLinks(groupId, languageId, themeDisplay, getLinks, getImages);
+		}
 		else {
 			return null;
 		}
+	}
+
+	public static List<ContentLinks> getRSSPortletLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
+		throws Exception {
+
+		_log.info("getRSSPortletLinks for groupId " + String.valueOf(groupId));
+
+		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
+
+		List<Layout> allLayouts = new LinkedList<Layout>();
+		
+		allLayouts = LayoutLocalServiceUtil.getLayouts(themeDisplay.getScopeGroupId(), false);
+		allLayouts.addAll(LayoutLocalServiceUtil.getLayouts(themeDisplay.getScopeGroupId(), true));
+		
+		List<Layout> sortedLayouts = new ArrayList<Layout>(allLayouts);
+		Collections.sort(sortedLayouts, new LayoutComparator());
+
+		String editLink = themeDisplay.getURLControlPanel();
+		//PortletLocalServiceUtil.getPortlets(companyId);
+
+		for (Layout layout : allLayouts) {
+			
+			LayoutTypePortlet layoutTypePortlet = (LayoutTypePortlet) layout.getLayoutType();
+			
+			try {
+				
+				for (Portlet portlet : layoutTypePortlet.getAllPortlets()) {
+					
+					if (portlet.getPortletName().equals(PortletKeys.RSS)) {
+						
+						_log.debug("Extracting links from RSS portlet " + layout.getFriendlyURL() + " - " + layout.getName());
+
+						ContentLinks contentLinks = new ContentLinks();
+						contentLinks.setClassName(portlet.getPortletClass());
+						contentLinks.setClassPK(portlet.getInstanceId());
+						contentLinks.setContentTitle(layout.getName() + " - " + portlet.getInstanceId());
+						contentLinks.setContentEditLink(layout.getFriendlyURL());
+						contentLinks.setModifiedDate(layout.getModifiedDate());
+						
+						javax.portlet.PortletPreferences portletPreferences = PortletPreferencesLocalServiceUtil.getPreferences(
+							portlet.getCompanyId(), PortletKeys.PREFS_OWNER_ID_DEFAULT, PortletKeys.PREFS_OWNER_TYPE_LAYOUT, layout.getPlid(), portlet.getPortletId());
+
+						for (String url : portletPreferences.getValues("urls", new String[0])) {
+							
+							_log.debug("	 " + url);
+							
+							contentLinks.addLink(url);
+						}
+
+						contentLinksList.add(contentLinks);
+					}
+				}
+			}
+			catch (PortalException e) {
+				_log.error(e.getMessage(), e);
+			}
+			catch (SystemException e) {
+				_log.error(e.getMessage(), e);
+			}
+		}
+
+		return contentLinksList;
 	}
 
 	public static List<ContentLinks> getWebContentLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
