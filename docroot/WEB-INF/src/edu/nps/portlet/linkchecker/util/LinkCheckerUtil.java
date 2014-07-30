@@ -17,8 +17,6 @@ import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
-import com.liferay.portlet.wiki.model.WikiPageConstants;
-import com.liferay.portlet.wiki.model.WikiPageDisplay;
 import com.liferay.portlet.wiki.service.WikiNodeLocalServiceUtil;
 import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
 import com.liferay.util.HTMLParser;
@@ -166,9 +164,9 @@ public class LinkCheckerUtil {
 		editLink = HttpUtil.setParameter(editLink, "p_p_lifecycle", "0");
 		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
 		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.JOURNAL) + "struts_action", "/journal/edit_article");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.JOURNAL) + "redirect", themeDisplay.getURLCurrent());
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.JOURNAL) + "groupId", groupId);
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.WIKI_ADMIN) + "struts_action", "/wiki_admin/edit_page");
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.WIKI_ADMIN) + "redirect", themeDisplay.getURLCurrent());
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.WIKI_ADMIN) + "groupId", groupId);
 
 		for (WikiPage wikiPage : wikiPageList) {
 
@@ -182,7 +180,8 @@ public class LinkCheckerUtil {
 
 				if (links.size() > 0) {
 
-					editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.WIKI_ADMIN) + "pageId", wikiPage.getPageId());
+					editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.WIKI_ADMIN) + "nodeId", wikiPage.getNodeId());
+					editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.WIKI_ADMIN) + "title", wikiPage.getTitle());
 
 					ContentLinks contentLinks = new ContentLinks();
 					contentLinks.setClassName(wikiPage.getModelClassName());
