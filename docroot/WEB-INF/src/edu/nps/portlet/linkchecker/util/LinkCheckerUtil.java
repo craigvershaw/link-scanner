@@ -127,12 +127,13 @@ public class LinkCheckerUtil {
 						ContentLinks contentLinks = new ContentLinks();
 						contentLinks.setClassName(portlet.getPortletClass());
 						contentLinks.setClassPK(portlet.getInstanceId());
-						contentLinks.setContentTitle(layout.getName() + " - " + portlet.getInstanceId());
 						contentLinks.setContentEditLink(getLayoutURL(themeDisplay, layout));
 						contentLinks.setModifiedDate(layout.getModifiedDate());
 						
 						javax.portlet.PortletPreferences portletPreferences = PortletPreferencesLocalServiceUtil.getPreferences(
 							portlet.getCompanyId(), PortletKeys.PREFS_OWNER_ID_DEFAULT, PortletKeys.PREFS_OWNER_TYPE_LAYOUT, layout.getPlid(), portlet.getPortletId());
+
+						contentLinks.setContentTitle(layout.getName() + " (" + portletPreferences.getValue("portletSetupTitle_" + themeDisplay.getLocale(), portlet.getDisplayName()) + ")");
 
 						for (String url : portletPreferences.getValues("urls", new String[0])) {
 							
