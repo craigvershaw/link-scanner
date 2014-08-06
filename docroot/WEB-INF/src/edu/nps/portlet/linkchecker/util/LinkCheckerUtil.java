@@ -112,9 +112,6 @@ public class LinkCheckerUtil {
 		List<Layout> sortedLayouts = new ArrayList<Layout>(allLayouts);
 		Collections.sort(sortedLayouts, new LayoutComparator());
 
-		String editLink = themeDisplay.getURLControlPanel();
-		//PortletLocalServiceUtil.getPortlets(companyId);
-
 		for (Layout layout : allLayouts) {
 			
 			LayoutTypePortlet layoutTypePortlet = (LayoutTypePortlet) layout.getLayoutType();
@@ -131,7 +128,7 @@ public class LinkCheckerUtil {
 						contentLinks.setClassName(portlet.getPortletClass());
 						contentLinks.setClassPK(portlet.getInstanceId());
 						contentLinks.setContentTitle(layout.getName() + " - " + portlet.getInstanceId());
-						contentLinks.setContentEditLink(layout.getFriendlyURL());
+						contentLinks.setContentEditLink(getLayoutURL(themeDisplay, layout));
 						contentLinks.setModifiedDate(layout.getModifiedDate());
 						
 						javax.portlet.PortletPreferences portletPreferences = PortletPreferencesLocalServiceUtil.getPreferences(
@@ -274,6 +271,27 @@ public class LinkCheckerUtil {
 		}
 
 		return contentLinksList;
+	}
+
+	public static String getLayoutURL(ThemeDisplay themeDisplay, Layout layout) {
+
+		String url = "";
+
+		try {
+
+			url = themeDisplay.getPortalURL() +
+							(layout.isPrivateLayout()? themeDisplay.getPathFriendlyURLPrivateGroup(): themeDisplay.getPathFriendlyURLPublic()) +
+							layout.getGroup().getFriendlyURL() + 
+							layout.getFriendlyURL();
+		}
+		catch (PortalException e) {
+			_log.error("PortalException: " + e.getMessage(), e);
+		}
+		catch (SystemException e) {
+			_log.error("SystemException: " + e.getMessage(), e);
+		}
+
+		return url;
 	}
 
 	public static boolean isPortalLink(String url, ThemeDisplay themeDisplay)
