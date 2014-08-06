@@ -1,7 +1,7 @@
-.link-checker-result {
+.link-checker-result, .link-checker-result-legend {
 	background-repeat: no-repeat;
 	height: 20px;
-	width: 20px;
+	padding-left: 24px;
 }
 
 .link-checker-unchecked {
@@ -18,4 +18,14 @@
 
 .link-checker-error {
 	background-image: url('../images/error.png');
+}
+
+#linkCheckerOptions {
+	clear: both;
+	overflow: hidden;
+	height: auto;
+}
+
+.link-checker-legend {
+	float: right;
 }

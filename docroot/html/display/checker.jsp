@@ -31,6 +31,18 @@ List<ContentLinks> contentLinksList = LinkCheckerUtil.getContentLinks(contentTyp
 	<div class="taglib-search-iterator-page-iterator-top">
 		<div class="taglib-page-iterator" id="<portlet:namespace/>SearchContainerPageIteratorTop">
 			<div class="search-results">Checking <%= checkType %> for <%= contentLinksList.size() %> <liferay-ui:message key="<%= contentType %>" /> items.</div>
+
+			<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id="linkCheckerOptions" persistState="<%= true %>" title="options">
+				<liferay-ui:message key="result-hover-description" />
+				
+				<div class="link-checker-legend">
+					<strong>Legend</strong>
+					<div class="link-checker-result-legend link-checker-unchecked">Link has not been checked</div>
+					<div class="link-checker-result-legend link-checker-success">Working link</div>
+					<div class="link-checker-result-legend link-checker-redirect">Working link with redirect code</div>
+					<div class="link-checker-result-legend link-checker-error">Broken link</div>
+				</div>
+			</liferay-ui:panel>
 		</div>
 	</div>
 
