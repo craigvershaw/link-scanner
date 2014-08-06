@@ -224,7 +224,7 @@ public class LinkCheckerUtil {
 
 		List<WikiNode> wikiNodeList = WikiNodeLocalServiceUtil.getNodes(groupId);
 
-		List<WikiPage> wikiPageList = new ArrayList<WikiPage>(); //= WikiPageLocalServiceUtil.getPages(WikiPageConstants.DEFAULT_FORMAT);
+		List<WikiPage> wikiPageList = new ArrayList<WikiPage>();
 
 		for (WikiNode wikiNode : wikiNodeList) {
 
@@ -243,8 +243,6 @@ public class LinkCheckerUtil {
 		for (WikiPage wikiPage : wikiPageList) {
 
 			String content = wikiPage.getContent();
-			
-			//WikiPageDisplay pageDisplay = WikiPageLocalServiceUtil.getPageDisplay(page, viewPageURL, editPageURL, attachmentURLPrefix);
 
 			if (content != null && wikiPage.getFormat().equals("html")) {
 
