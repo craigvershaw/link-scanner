@@ -106,7 +106,7 @@ public class LinkCheckerUtil {
 
 		List<Layout> allLayouts = new LinkedList<Layout>();
 		
-		allLayouts = LayoutLocalServiceUtil.getLayouts(themeDisplay.getScopeGroupId(), false);
+		allLayouts.addAll(LayoutLocalServiceUtil.getLayouts(themeDisplay.getScopeGroupId(), false));
 		allLayouts.addAll(LayoutLocalServiceUtil.getLayouts(themeDisplay.getScopeGroupId(), true));
 		
 		List<Layout> sortedLayouts = new ArrayList<Layout>(allLayouts);
