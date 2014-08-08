@@ -192,7 +192,7 @@ public class LinkCheckerUtil {
 						ContentLinks contentLinks = new ContentLinks();
 						contentLinks.setClassName(journalArticle.getClassName());
 						contentLinks.setClassPK(journalArticle.getArticleId());
-						contentLinks.setContentTitle(journalArticle.getTitle());
+						contentLinks.setContentTitle(journalArticle.getTitle(themeDisplay.getLocale()));
 						contentLinks.setContentEditLink(editLink);
 						contentLinks.setModifiedDate(journalArticle.getModifiedDate());
 						contentLinks.setStatus(journalArticle.getStatus());
