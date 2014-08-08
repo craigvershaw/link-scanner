@@ -20,6 +20,10 @@
 	background-image: url('../images/error.png');
 }
 
+#linkCheckerProgressBarContainer {
+	clear: both;
+}
+
 #linkCheckerOptions {
 	clear: both;
 	overflow: hidden;

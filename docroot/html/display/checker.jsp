@@ -17,9 +17,15 @@ else if (checkLinks && checkImages) {
 	checkType = "Links and Images";	
 }
 
-boolean rowAlt = true;
-
 List<ContentLinks> contentLinksList = LinkCheckerUtil.getContentLinks(contentType, scopeGroupId, languageId, themeDisplay, checkLinks, checkImages);
+
+int checkCount = 0;
+
+for (ContentLinks contentLinks : contentLinksList) {
+	checkCount = checkCount + contentLinks.getLinksSize();
+}
+
+boolean rowAlt = true;
 %>
 
 <liferay-ui:header
@@ -30,7 +36,11 @@ List<ContentLinks> contentLinksList = LinkCheckerUtil.getContentLinks(contentTyp
 <div class="lfr-search-container ">
 	<div class="taglib-search-iterator-page-iterator-top">
 		<div class="taglib-page-iterator" id="<portlet:namespace/>SearchContainerPageIteratorTop">
-			<div class="search-results">Checking <%= checkType %> for <%= contentLinksList.size() %> <liferay-ui:message key="<%= contentType %>" /> items.</div>
+			<div class="search-results">Checking <%= checkCount %> <%= checkType %> for <%= contentLinksList.size() %> <liferay-ui:message key="<%= contentType %>" /> items.</div>
+
+			<div id="linkCheckerProgressBarContainer">
+				<div class="linkCheckerProgressBar"></div>
+			</div>
 
 			<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id="linkCheckerOptions" persistState="<%= true %>" title="options">
 				<liferay-ui:message key="result-hover-description" />
@@ -116,12 +126,14 @@ List<ContentLinks> contentLinksList = LinkCheckerUtil.getContentLinks(contentTyp
 						{
 							on: {
 								failure: function(event, id, obj) {
+									pbIncrement();
 									node.removeClass('link-checker-unchecked');
 									node.removeClass('link-checker-success');
 									node.addClass('link-checker-error');
 									node.attr('title','XMLRPC Failed');
 								},
 								success: function(event, id, obj) {
+									pbIncrement();
 									node.removeClass('link-checker-unchecked');
 									node.removeClass('link-checker-error');
 									node.addClass('link-checker-success');
@@ -138,12 +150,14 @@ List<ContentLinks> contentLinksList = LinkCheckerUtil.getContentLinks(contentTyp
 							dataType: 'json',
 							on: {
 								failure: function(event, id, obj) {
+									pbIncrement();
 									node.removeClass('link-checker-unchecked');
 									node.removeClass('link-checker-success');
 									node.addClass('link-checker-error');
 									node.attr('title','Web Service Request Failed');
 								},
 								success: function(event, id, obj) {
+									pbIncrement();
 									var response = this.get('responseData');
 									var exception = response.exception;
 									
@@ -182,17 +196,45 @@ List<ContentLinks> contentLinksList = LinkCheckerUtil.getContentLinks(contentTyp
 		['aui-io']
 	);
 
+	var progressBarTotal = <%= checkCount %>;
+	var progressBarCount = 0;
+	var progressBarPercent = 0;
+	var progressBar
+	
+	function pbIncrement() {
+		++progressBarCount;
+		progressBarPercent = (progressBarCount / progressBarTotal) * 100;
+		progressBar.set('label', 'Checking... ' + Math.round(progressBarPercent) + '%');
+		progressBar.set('value', Math.round(progressBarPercent));
+	}
+	
+	AUI().ready('aui-tooltip', 
+		'aui-io-plugin',
+		'aui-progressbar',
+		function(A) {
+			
+			var tipresult = new A.Tooltip({
+				trigger: '.link-checker-result',
+				align: { points: [ 'br', 'tl' ] },
+				title: true
+			})
+			.render();
+			
+			progressBar = new A.ProgressBar(
+				{
+					boundingBox: '#linkCheckerProgressBarContainer',
+					contentBox: '.linkCheckerProgressBar',
+					label: 'Checking...',
+					on: {
+						complete: function(e) {
+							this.set('label', 'Complete! 100%');
+						}
+					},
+					value: progressBarCount
+				}
+			).render();
 	<portlet:namespace />checkLinks();
-
-	AUI().ready('aui-tooltip', 'aui-io-plugin', function(A) {
-	
-		var tipresult = new A.Tooltip({
-			trigger: '.link-checker-result',
-			align: { points: [ 'br', 'tl' ] },
-			title: true
-		})
-		.render();
-	
-	});
+		}
+	);
 
 </aui:script>
