@@ -26,10 +26,10 @@
 			-->
 		</aui:field-wrapper>
 
-		<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" id="linkCheckerAdvanced" persistState="<%= true %>" title="advanced">
+		<aui:field-wrapper label="options">
 			<aui:input inlineLabel="right" name="check-links" type="checkbox" checked="<%= true %>" />
 			<aui:input inlineLabel="right" name="check-images" type="checkbox" />
-		</liferay-ui:panel>
+		</aui:field-wrapper>
 
 		<aui:button-row>
 			<aui:button onClick='<%= renderResponse.getNamespace() + "extractLinks();" %>' value="process" />
