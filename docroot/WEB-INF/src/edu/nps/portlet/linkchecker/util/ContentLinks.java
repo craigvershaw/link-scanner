@@ -55,6 +55,11 @@ public class ContentLinks {
 		this.classPK = classPK;
 	}
 	
+	public void setClassPK(long classPK) {
+		
+		setClassPK(String.valueOf(classPK));
+	}
+	
 	public Date getModifiedDate() {
 	
 		return modifiedDate;

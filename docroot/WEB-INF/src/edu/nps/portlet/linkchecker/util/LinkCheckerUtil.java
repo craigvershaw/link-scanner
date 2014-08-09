@@ -6,7 +6,6 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutTypePortlet;
@@ -17,6 +16,8 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.comparator.LayoutComparator;
+import com.liferay.portlet.calendar.model.CalEvent;
+import com.liferay.portlet.calendar.service.CalEventLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
@@ -83,18 +84,74 @@ public class LinkCheckerUtil {
 	public static List<ContentLinks> getContentLinks(String contentType, long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
 		throws Exception {
 
-		if (contentType.equals("web-content")) {
+		if (contentType.equals("calendar-events")) {
+			return getCalendarLinks(groupId, languageId, themeDisplay, getLinks, getImages);
+		}
+		else if (contentType.equals("rss-portlet-subscriptions")) {
+			return getRSSPortletLinks(groupId, languageId, themeDisplay, getLinks, getImages);
+		}
+		else if (contentType.equals("web-content")) {
 			return getWebContentLinks(groupId, languageId, themeDisplay, getLinks, getImages);
 		}
 		else if (contentType.equals("wiki-pages")) {
 			return getWikiContentLinks(groupId, languageId, themeDisplay, getLinks, getImages);
 		}
-		else if (contentType.equals("rss-portlet-subscriptions")) {
-			return getRSSPortletLinks(groupId, languageId, themeDisplay, getLinks, getImages);
-		}
 		else {
 			return null;
 		}
+	}
+
+	public static List<ContentLinks> getCalendarLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
+		throws Exception {
+
+		_log.info("getCalendarLinks for groupId " + String.valueOf(groupId));
+
+		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
+
+		List<CalEvent> calEventList = CalEventLocalServiceUtil.getEvents(groupId, "", 0, -1);
+		_log.info("	" + String.valueOf(calEventList.size()));
+
+		String editLink = themeDisplay.getURLControlPanel();
+		editLink = HttpUtil.setParameter(editLink, "p_p_id", PortletKeys.CALENDAR);
+		editLink = HttpUtil.setParameter(editLink, "p_p_lifecycle", "0");
+		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
+		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.CALENDAR) + "struts_action", "/calendar/edit_event");
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.CALENDAR) + "redirect", themeDisplay.getURLCurrent());
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.CALENDAR) + "groupId", groupId);
+
+		for (CalEvent calEvent : calEventList) {
+
+				String content = calEvent.getDescription();
+
+				if (content != null) {
+
+					List<String> links = parseLinks(content, getLinks, getImages);
+
+					if (links.size() > 0) {
+
+						editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.CALENDAR) + "eventId", calEvent.getEventId());
+
+						ContentLinks contentLinks = new ContentLinks();
+						contentLinks.setClassName(calEvent.getModelClassName());
+						contentLinks.setClassPK(calEvent.getEventId());
+						contentLinks.setContentTitle(calEvent.getTitle());
+						contentLinks.setContentEditLink(editLink);
+						contentLinks.setModifiedDate(calEvent.getModifiedDate());
+						
+						_log.debug("Extracting links from calendar event " + calEvent.getEventId() + " - " + calEvent.getTitle());
+						
+						for (String link : links) {
+
+							contentLinks.addLink(link);
+						}
+						
+						contentLinksList.add(contentLinks);
+					}
+				}
+		}
+
+		return contentLinksList;
 	}
 
 	public static List<ContentLinks> getRSSPortletLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
