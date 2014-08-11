@@ -15,6 +15,7 @@
 		<aui:field-wrapper name="content-types" label="content-types">
 			<aui:select name="content-type" inlineLabel="right" label="">
 				<aui:option label="blog-entries" />
+				<aui:option label="bookmarks" />
 				<aui:option label="calendar-events" />
 				<aui:option label="message-board-messages" />
 				<aui:option label="rss-portlet-subscriptions" />

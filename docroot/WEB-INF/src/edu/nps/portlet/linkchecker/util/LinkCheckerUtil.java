@@ -21,6 +21,8 @@ import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.comparator.LayoutComparator;
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
+import com.liferay.portlet.bookmarks.model.BookmarksEntry;
+import com.liferay.portlet.bookmarks.service.BookmarksEntryLocalServiceUtil;
 import com.liferay.portlet.calendar.model.CalEvent;
 import com.liferay.portlet.calendar.service.CalEventLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
@@ -94,6 +96,9 @@ public class LinkCheckerUtil {
 		if (contentType.equals("blog-entries")) {
 			return getBlogLinks(groupId, languageId, themeDisplay, getLinks, getImages);
 		}
+		else if (contentType.equals("bookmarks")) {
+			return getBookmarkLinks(groupId, languageId, themeDisplay, getLinks, getImages);
+		}
 		else if (contentType.equals("calendar-events")) {
 			return getCalendarLinks(groupId, languageId, themeDisplay, getLinks, getImages);
 		}
@@ -134,34 +139,78 @@ public class LinkCheckerUtil {
 
 		for (BlogsEntry blogsEntry : blogsEntryList) {
 
-				String content = blogsEntry.getContent();
+			String content = blogsEntry.getContent();
 
-				if (content != null) {
+			if (content != null) {
 
-					List<String> links = parseLinks(content, getLinks, getImages);
+				List<String> links = parseLinks(content, getLinks, getImages);
 
-					if (links.size() > 0) {
+				if (links.size() > 0) {
 
-						editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BLOGS_ADMIN) + "entryId", blogsEntry.getEntryId());
+					editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BLOGS_ADMIN) + "entryId", blogsEntry.getEntryId());
 
-						ContentLinks contentLinks = new ContentLinks();
-						contentLinks.setClassName(blogsEntry.getModelClassName());
-						contentLinks.setClassPK(blogsEntry.getEntryId());
-						contentLinks.setContentTitle(blogsEntry.getTitle());
-						contentLinks.setContentEditLink(editLink);
-						contentLinks.setModifiedDate(blogsEntry.getModifiedDate());
-						contentLinks.setStatus(blogsEntry.getStatus());
-						
-						_log.debug("Extracting links from blog entry " + blogsEntry.getEntryId() + " - " + blogsEntry.getTitle());
-						
-						for (String link : links) {
+					ContentLinks contentLinks = new ContentLinks();
+					contentLinks.setClassName(blogsEntry.getModelClassName());
+					contentLinks.setClassPK(blogsEntry.getEntryId());
+					contentLinks.setContentTitle(blogsEntry.getTitle());
+					contentLinks.setContentEditLink(editLink);
+					contentLinks.setModifiedDate(blogsEntry.getModifiedDate());
+					contentLinks.setStatus(blogsEntry.getStatus());
+					
+					_log.debug("Extracting links from blog entry " + blogsEntry.getEntryId() + " - " + blogsEntry.getTitle());
+					
+					for (String link : links) {
 
-							contentLinks.addLink(link);
-						}
-						
-						contentLinksList.add(contentLinks);
+						contentLinks.addLink(link);
 					}
+					
+					contentLinksList.add(contentLinks);
 				}
+			}
+		}
+
+		return contentLinksList;
+	}
+
+	public static List<ContentLinks> getBookmarkLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
+		throws Exception {
+
+		_log.info("getBookmarkLinks for groupId " + String.valueOf(groupId));
+
+		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
+
+		List<BookmarksEntry> bookmarksEntryList = BookmarksEntryLocalServiceUtil.getGroupEntries(groupId, 0, -1);
+
+		String editLink = themeDisplay.getURLControlPanel();
+		editLink = HttpUtil.setParameter(editLink, "p_p_id", PortletKeys.BOOKMARKS);
+		editLink = HttpUtil.setParameter(editLink, "p_p_lifecycle", "0");
+		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
+		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BOOKMARKS) + "struts_action", "/bookmarks/edit_entry");
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BOOKMARKS) + "redirect", themeDisplay.getURLCurrent());
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BOOKMARKS) + "groupId", groupId);
+
+		for (BookmarksEntry bookmarksEntry : bookmarksEntryList) {
+
+			String link = bookmarksEntry.getUrl();
+
+			if (link != null) {
+
+				editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BOOKMARKS) + "entryId", bookmarksEntry.getEntryId());
+
+				ContentLinks contentLinks = new ContentLinks();
+				contentLinks.setClassName(bookmarksEntry.getModelClassName());
+				contentLinks.setClassPK(bookmarksEntry.getEntryId());
+				contentLinks.setContentTitle(bookmarksEntry.getName());
+				contentLinks.setContentEditLink(editLink);
+				contentLinks.setModifiedDate(bookmarksEntry.getModifiedDate());
+				
+				_log.debug("Extracting link from bookmarks entry " + bookmarksEntry.getEntryId() + " - " + bookmarksEntry.getName());
+				
+				contentLinks.addLink(link);
+				
+				contentLinksList.add(contentLinks);
+			}
 		}
 
 		return contentLinksList;
@@ -187,33 +236,33 @@ public class LinkCheckerUtil {
 
 		for (CalEvent calEvent : calEventList) {
 
-				String content = calEvent.getDescription();
+			String content = calEvent.getDescription();
 
-				if (content != null) {
+			if (content != null) {
 
-					List<String> links = parseLinks(content, getLinks, getImages);
+				List<String> links = parseLinks(content, getLinks, getImages);
 
-					if (links.size() > 0) {
+				if (links.size() > 0) {
 
-						editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.CALENDAR) + "eventId", calEvent.getEventId());
+					editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.CALENDAR) + "eventId", calEvent.getEventId());
 
-						ContentLinks contentLinks = new ContentLinks();
-						contentLinks.setClassName(calEvent.getModelClassName());
-						contentLinks.setClassPK(calEvent.getEventId());
-						contentLinks.setContentTitle(calEvent.getTitle());
-						contentLinks.setContentEditLink(editLink);
-						contentLinks.setModifiedDate(calEvent.getModifiedDate());
-						
-						_log.debug("Extracting links from calendar event " + calEvent.getEventId() + " - " + calEvent.getTitle());
-						
-						for (String link : links) {
+					ContentLinks contentLinks = new ContentLinks();
+					contentLinks.setClassName(calEvent.getModelClassName());
+					contentLinks.setClassPK(calEvent.getEventId());
+					contentLinks.setContentTitle(calEvent.getTitle());
+					contentLinks.setContentEditLink(editLink);
+					contentLinks.setModifiedDate(calEvent.getModifiedDate());
+					
+					_log.debug("Extracting links from calendar event " + calEvent.getEventId() + " - " + calEvent.getTitle());
+					
+					for (String link : links) {
 
-							contentLinks.addLink(link);
-						}
-						
-						contentLinksList.add(contentLinks);
+						contentLinks.addLink(link);
 					}
+					
+					contentLinksList.add(contentLinks);
 				}
+			}
 		}
 
 		return contentLinksList;
@@ -239,38 +288,38 @@ public class LinkCheckerUtil {
 
 		for (MBMessage message : messageList) {
 
-				String content = message.getBody();
-				if (message.isFormatBBCode()) {
-					content = BBCodeTranslatorUtil.getHTML(message.getBody());
-					content = StringUtil.replace(content, "@theme_images_path@/emoticons", themeDisplay.getPathThemeImages() + "/emoticons");
-				}
+			String content = message.getBody();
+			if (message.isFormatBBCode()) {
+				content = BBCodeTranslatorUtil.getHTML(message.getBody());
+				content = StringUtil.replace(content, "@theme_images_path@/emoticons", themeDisplay.getPathThemeImages() + "/emoticons");
+			}
 
-				if (content != null) {
+			if (content != null) {
 
-					List<String> links = parseLinks(content, getLinks, getImages);
+				List<String> links = parseLinks(content, getLinks, getImages);
 
-					if (links.size() > 0) {
+				if (links.size() > 0) {
 
-						editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.MESSAGE_BOARDS_ADMIN) + "messageId", message.getMessageId());
+					editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.MESSAGE_BOARDS_ADMIN) + "messageId", message.getMessageId());
 
-						ContentLinks contentLinks = new ContentLinks();
-						contentLinks.setClassName(message.getModelClassName());
-						contentLinks.setClassPK(message.getMessageId());
-						contentLinks.setContentTitle(message.getSubject());
-						contentLinks.setContentEditLink(editLink);
-						contentLinks.setModifiedDate(message.getModifiedDate());
-						contentLinks.setStatus(message.getStatus());
-						
-						_log.debug("Extracting links from message " + message.getMessageId() + " - " + message.getSubject());
-						
-						for (String link : links) {
+					ContentLinks contentLinks = new ContentLinks();
+					contentLinks.setClassName(message.getModelClassName());
+					contentLinks.setClassPK(message.getMessageId());
+					contentLinks.setContentTitle(message.getSubject());
+					contentLinks.setContentEditLink(editLink);
+					contentLinks.setModifiedDate(message.getModifiedDate());
+					contentLinks.setStatus(message.getStatus());
+					
+					_log.debug("Extracting links from message " + message.getMessageId() + " - " + message.getSubject());
+					
+					for (String link : links) {
 
-							contentLinks.addLink(link);
-						}
-						
-						contentLinksList.add(contentLinks);
+						contentLinks.addLink(link);
 					}
+					
+					contentLinksList.add(contentLinks);
 				}
+			}
 		}
 
 		return contentLinksList;
