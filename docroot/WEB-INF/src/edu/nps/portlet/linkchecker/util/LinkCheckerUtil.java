@@ -7,6 +7,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Portlet;
@@ -16,6 +17,8 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.comparator.LayoutComparator;
+import com.liferay.portlet.blogs.model.BlogsEntry;
+import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.portlet.calendar.model.CalEvent;
 import com.liferay.portlet.calendar.service.CalEventLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
@@ -84,7 +87,10 @@ public class LinkCheckerUtil {
 	public static List<ContentLinks> getContentLinks(String contentType, long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
 		throws Exception {
 
-		if (contentType.equals("calendar-events")) {
+		if (contentType.equals("blog-entries")) {
+			return getBlogLinks(groupId, languageId, themeDisplay, getLinks, getImages);
+		}
+		else if (contentType.equals("calendar-events")) {
 			return getCalendarLinks(groupId, languageId, themeDisplay, getLinks, getImages);
 		}
 		else if (contentType.equals("rss-portlet-subscriptions")) {
@@ -101,6 +107,59 @@ public class LinkCheckerUtil {
 		}
 	}
 
+	public static List<ContentLinks> getBlogLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
+		throws Exception {
+
+		_log.info("getBlogLinks for groupId " + String.valueOf(groupId));
+
+		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
+
+		List<BlogsEntry> blogsEntryList = BlogsEntryLocalServiceUtil.getGroupEntries(groupId, WorkflowConstants.STATUS_APPROVED, 0, -1);
+
+		String editLink = themeDisplay.getURLControlPanel();
+		editLink = HttpUtil.setParameter(editLink, "p_p_id", PortletKeys.BLOGS_ADMIN);
+		editLink = HttpUtil.setParameter(editLink, "p_p_lifecycle", "0");
+		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
+		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BLOGS_ADMIN) + "struts_action", "/blogs_admin/edit_entry");
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BLOGS_ADMIN) + "redirect", themeDisplay.getURLCurrent());
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BLOGS_ADMIN) + "groupId", groupId);
+
+		for (BlogsEntry blogsEntry : blogsEntryList) {
+
+				String content = blogsEntry.getContent();
+
+				if (content != null) {
+
+					List<String> links = parseLinks(content, getLinks, getImages);
+
+					if (links.size() > 0) {
+
+						editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BLOGS_ADMIN) + "entryId", blogsEntry.getEntryId());
+
+						ContentLinks contentLinks = new ContentLinks();
+						contentLinks.setClassName(blogsEntry.getModelClassName());
+						contentLinks.setClassPK(blogsEntry.getEntryId());
+						contentLinks.setContentTitle(blogsEntry.getTitle());
+						contentLinks.setContentEditLink(editLink);
+						contentLinks.setModifiedDate(blogsEntry.getModifiedDate());
+						contentLinks.setStatus(blogsEntry.getStatus());
+						
+						_log.debug("Extracting links from blog entry " + blogsEntry.getEntryId() + " - " + blogsEntry.getTitle());
+						
+						for (String link : links) {
+
+							contentLinks.addLink(link);
+						}
+						
+						contentLinksList.add(contentLinks);
+					}
+				}
+		}
+
+		return contentLinksList;
+	}
+
 	public static List<ContentLinks> getCalendarLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
 		throws Exception {
 
@@ -109,7 +168,6 @@ public class LinkCheckerUtil {
 		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
 
 		List<CalEvent> calEventList = CalEventLocalServiceUtil.getEvents(groupId, "", 0, -1);
-		_log.info("	" + String.valueOf(calEventList.size()));
 
 		String editLink = themeDisplay.getURLControlPanel();
 		editLink = HttpUtil.setParameter(editLink, "p_p_id", PortletKeys.CALENDAR);
