@@ -12,6 +12,7 @@
 		<preferences-company-wide>true</preferences-company-wide>
 		<preferences-unique-per-layout>false</preferences-unique-per-layout>
 		<instanceable>false</instanceable>
+		<scopeable>true</scopeable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>linkchecker-portlet</css-class-wrapper>
