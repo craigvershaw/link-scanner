@@ -33,6 +33,16 @@ boolean rowAlt = true;
 	title="<%= contentType %>"
 />
 
+<c:choose>
+	<c:when test='<%= !(checkCount > 0) %>'>
+
+		<div class="portlet-msg-info">
+			<liferay-ui:message arguments="<%= contentType %>" key="no-links-were-found-for-x" />
+		</div>
+		
+	</c:when>
+	<c:otherwise>
+
 <div class="lfr-search-container ">
 	<div class="taglib-search-iterator-page-iterator-top">
 		<div class="taglib-page-iterator" id="<portlet:namespace/>SearchContainerPageIteratorTop">
@@ -238,3 +248,6 @@ boolean rowAlt = true;
 	);
 
 </aui:script>
+
+	</c:otherwise>
+</c:choose>
