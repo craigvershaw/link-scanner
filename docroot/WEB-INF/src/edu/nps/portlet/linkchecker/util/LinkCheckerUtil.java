@@ -4,8 +4,10 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.parsers.bbcode.BBCodeTranslatorUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Layout;
@@ -24,6 +26,8 @@ import com.liferay.portlet.calendar.service.CalEventLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
+import com.liferay.portlet.messageboards.model.MBMessage;
+import com.liferay.portlet.messageboards.service.MBMessageLocalServiceUtil;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.service.WikiNodeLocalServiceUtil;
@@ -92,6 +96,9 @@ public class LinkCheckerUtil {
 		}
 		else if (contentType.equals("calendar-events")) {
 			return getCalendarLinks(groupId, languageId, themeDisplay, getLinks, getImages);
+		}
+		else if (contentType.equals("message-board-messages")) {
+			return getMBMessageLinks(groupId, languageId, themeDisplay, getLinks, getImages);
 		}
 		else if (contentType.equals("rss-portlet-subscriptions")) {
 			return getRSSPortletLinks(groupId, languageId, themeDisplay, getLinks, getImages);
@@ -198,6 +205,63 @@ public class LinkCheckerUtil {
 						contentLinks.setModifiedDate(calEvent.getModifiedDate());
 						
 						_log.debug("Extracting links from calendar event " + calEvent.getEventId() + " - " + calEvent.getTitle());
+						
+						for (String link : links) {
+
+							contentLinks.addLink(link);
+						}
+						
+						contentLinksList.add(contentLinks);
+					}
+				}
+		}
+
+		return contentLinksList;
+	}
+
+	public static List<ContentLinks> getMBMessageLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
+		throws Exception {
+
+		_log.info("getMBMessageLinks for groupId " + String.valueOf(groupId));
+
+		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
+
+		List<MBMessage> messageList = MBMessageLocalServiceUtil.getGroupMessages(groupId, WorkflowConstants.STATUS_APPROVED, 0, -1);
+
+		String editLink = themeDisplay.getURLControlPanel();
+		editLink = HttpUtil.setParameter(editLink, "p_p_id", PortletKeys.MESSAGE_BOARDS_ADMIN);
+		editLink = HttpUtil.setParameter(editLink, "p_p_lifecycle", "0");
+		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
+		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.MESSAGE_BOARDS_ADMIN) + "struts_action", "/message_boards_admin/edit_message");
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.MESSAGE_BOARDS_ADMIN) + "redirect", themeDisplay.getURLCurrent());
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.MESSAGE_BOARDS_ADMIN) + "groupId", groupId);
+
+		for (MBMessage message : messageList) {
+
+				String content = message.getBody();
+				if (message.isFormatBBCode()) {
+					content = BBCodeTranslatorUtil.getHTML(message.getBody());
+					content = StringUtil.replace(content, "@theme_images_path@/emoticons", themeDisplay.getPathThemeImages() + "/emoticons");
+				}
+
+				if (content != null) {
+
+					List<String> links = parseLinks(content, getLinks, getImages);
+
+					if (links.size() > 0) {
+
+						editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.MESSAGE_BOARDS_ADMIN) + "messageId", message.getMessageId());
+
+						ContentLinks contentLinks = new ContentLinks();
+						contentLinks.setClassName(message.getModelClassName());
+						contentLinks.setClassPK(message.getMessageId());
+						contentLinks.setContentTitle(message.getSubject());
+						contentLinks.setContentEditLink(editLink);
+						contentLinks.setModifiedDate(message.getModifiedDate());
+						contentLinks.setStatus(message.getStatus());
+						
+						_log.debug("Extracting links from message " + message.getMessageId() + " - " + message.getSubject());
 						
 						for (String link : links) {
 
