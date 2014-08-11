@@ -134,7 +134,6 @@ public class LinkCheckerUtil {
 		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
 		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
 		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BLOGS_ADMIN) + "struts_action", "/blogs_admin/edit_entry");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BLOGS_ADMIN) + "redirect", themeDisplay.getURLCurrent());
 		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BLOGS_ADMIN) + "groupId", groupId);
 
 		for (BlogsEntry blogsEntry : blogsEntryList) {
@@ -187,7 +186,6 @@ public class LinkCheckerUtil {
 		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
 		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
 		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BOOKMARKS) + "struts_action", "/bookmarks/edit_entry");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BOOKMARKS) + "redirect", themeDisplay.getURLCurrent());
 		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BOOKMARKS) + "groupId", groupId);
 
 		for (BookmarksEntry bookmarksEntry : bookmarksEntryList) {
@@ -231,7 +229,6 @@ public class LinkCheckerUtil {
 		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
 		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
 		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.CALENDAR) + "struts_action", "/calendar/edit_event");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.CALENDAR) + "redirect", themeDisplay.getURLCurrent());
 		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.CALENDAR) + "groupId", groupId);
 
 		for (CalEvent calEvent : calEventList) {
@@ -283,7 +280,6 @@ public class LinkCheckerUtil {
 		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
 		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
 		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.MESSAGE_BOARDS_ADMIN) + "struts_action", "/message_boards_admin/edit_message");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.MESSAGE_BOARDS_ADMIN) + "redirect", themeDisplay.getURLCurrent());
 		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.MESSAGE_BOARDS_ADMIN) + "groupId", groupId);
 
 		for (MBMessage message : messageList) {
@@ -400,7 +396,6 @@ public class LinkCheckerUtil {
 		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
 		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
 		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.JOURNAL) + "struts_action", "/journal/edit_article");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.JOURNAL) + "redirect", themeDisplay.getURLCurrent());
 		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.JOURNAL) + "groupId", groupId);
 
 		for (JournalArticle journalArticle : journalArticleList) {
@@ -463,7 +458,6 @@ public class LinkCheckerUtil {
 		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
 		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
 		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.WIKI_ADMIN) + "struts_action", "/wiki_admin/edit_page");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.WIKI_ADMIN) + "redirect", themeDisplay.getURLCurrent());
 		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.WIKI_ADMIN) + "groupId", groupId);
 
 		for (WikiPage wikiPage : wikiPageList) {
