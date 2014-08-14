@@ -6,16 +6,7 @@ String contentType = ParamUtil.getString(request, "content-type", "web-content")
 boolean checkLinks = ParamUtil.getBoolean(request, "check-links", true);
 boolean checkImages = ParamUtil.getBoolean(request, "check-images", false);
 
-String checkType = "Links";
-if (!checkLinks && !checkImages) {
-	checkLinks = true;
-}
-else if (!checkLinks && checkImages) {
-	checkType = "Images";	
-}
-else if (checkLinks && checkImages) {
-	checkType = "Links and Images";	
-}
+String checkType = LinkCheckerConstants.linkImagesLabel(checkLinks, checkImages);
 
 List<ContentLinks> contentLinksList = LinkCheckerUtil.getContentLinks(contentType, scopeGroupId, languageId, themeDisplay, checkLinks, checkImages);
 
@@ -46,7 +37,7 @@ boolean rowAlt = true;
 <div class="lfr-search-container ">
 	<div class="taglib-search-iterator-page-iterator-top">
 		<div class="taglib-page-iterator" id="<portlet:namespace/>SearchContainerPageIteratorTop">
-			<div class="search-results">Checking <%= checkCount %> <%= checkType %> for <%= contentLinksList.size() %> <liferay-ui:message key="<%= contentType %>" /> items.</div>
+			<div class="search-results">Checking <%= checkCount %> <liferay-ui:message key="<%= checkType %>" /> for <%= contentLinksList.size() %> <liferay-ui:message key="<%= contentType %>" /> items.</div>
 
 			<div id="linkCheckerProgressBarContainer">
 				<div class="linkCheckerProgressBar"></div>
@@ -57,10 +48,10 @@ boolean rowAlt = true;
 				
 				<div class="link-checker-legend">
 					<strong>Legend</strong>
-					<div class="link-checker-result-legend link-checker-unchecked">Link has not been checked</div>
-					<div class="link-checker-result-legend link-checker-success">Working link</div>
-					<div class="link-checker-result-legend link-checker-redirect">Working link with redirect code</div>
-					<div class="link-checker-result-legend link-checker-error">Broken link</div>
+					<div class="link-checker-result-legend link-checker-unchecked"><liferay-ui:message key="link-unchecked" /></div>
+					<div class="link-checker-result-legend link-checker-success"><liferay-ui:message key="link-success" /></div>
+					<div class="link-checker-result-legend link-checker-redirect"><liferay-ui:message key="link-redirect" /></div>
+					<div class="link-checker-result-legend link-checker-error"><liferay-ui:message key="link-error" /></div>
 				</div>
 			</liferay-ui:panel>
 		</div>
