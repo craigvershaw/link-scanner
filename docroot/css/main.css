@@ -22,6 +22,7 @@
 
 #linkCheckerProgressBarContainer {
 	clear: both;
+	max-width: 350px;
 }
 
 #linkCheckerOptions {
