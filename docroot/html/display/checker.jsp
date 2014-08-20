@@ -78,6 +78,12 @@ boolean rowAlt = true;
 					<tr class="link-checker-row-content results-row <%= (rowAlt?"portlet-section-alternate alt":"portlet-section-body") %>">
 						<td class="align-left col-1 first valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-result">&nbsp;</td>
 						<td class="align-left col-2 last valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-title-link">
+<%
+		if (contentType.equals("rss-portlet-subscriptions") || 
+			permissionChecker.hasPermission(
+			scopeGroupId, contentLinks.getClassName(),
+			contentLinks.getClassPK(), "UPDATE")) {
+%>
 							<liferay-ui:icon
 								image="edit"
 								label="<%= true %>"
@@ -85,6 +91,14 @@ boolean rowAlt = true;
 								target="_blank"
 								url="<%= contentLinks.getContentEditLink() %>"
 							/>
+<%
+		}
+		else {
+%>
+							<%= contentLinks.getContentTitle() %>
+<%
+		}
+%>
 						</td>
 					</tr>
 <%
