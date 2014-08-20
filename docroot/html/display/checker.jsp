@@ -230,7 +230,7 @@ boolean rowAlt = true;
 			
 			var tipresult = new A.Tooltip({
 				trigger: '.link-checker-result',
-				align: { points: [ 'br', 'tl' ] },
+				align: { points: [ 'bl', 'tr' ] },
 				title: true
 			})
 			.render();

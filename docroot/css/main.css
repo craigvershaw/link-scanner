@@ -4,6 +4,10 @@
 	padding-left: 24px;
 }
 
+.link-checker-result {
+	float: left;
+}
+
 .link-checker-unchecked {
 	background-image: url('../images/unchecked.png');
 }
