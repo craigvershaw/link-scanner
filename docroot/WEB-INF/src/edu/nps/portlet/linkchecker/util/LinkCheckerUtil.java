@@ -13,6 +13,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Portlet;
+import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -137,6 +138,10 @@ public class LinkCheckerUtil {
 		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BLOGS_ADMIN) + "groupId", groupId);
 
 		for (BlogsEntry blogsEntry : blogsEntryList) {
+			
+			if (!hasPermissionView(groupId, blogsEntry.getModelClassName(), blogsEntry.getPrimaryKey(), themeDisplay)) {
+				continue;
+			}
 
 			String content = blogsEntry.getContent();
 
@@ -189,6 +194,10 @@ public class LinkCheckerUtil {
 		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BOOKMARKS) + "groupId", groupId);
 
 		for (BookmarksEntry bookmarksEntry : bookmarksEntryList) {
+			
+			if (!hasPermissionView(groupId, bookmarksEntry.getModelClassName(), bookmarksEntry.getPrimaryKey(), themeDisplay)) {
+				continue;
+			}
 
 			String link = bookmarksEntry.getUrl();
 
@@ -232,6 +241,10 @@ public class LinkCheckerUtil {
 		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.CALENDAR) + "groupId", groupId);
 
 		for (CalEvent calEvent : calEventList) {
+			
+			if (!hasPermissionView(groupId, calEvent.getModelClassName(), calEvent.getPrimaryKey(), themeDisplay)) {
+				continue;
+			}
 
 			String content = calEvent.getDescription();
 
@@ -283,6 +296,10 @@ public class LinkCheckerUtil {
 		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.MESSAGE_BOARDS_ADMIN) + "groupId", groupId);
 
 		for (MBMessage message : messageList) {
+			
+			if (!hasPermissionView(groupId, message.getModelClassName(), message.getPrimaryKey(), themeDisplay)) {
+				continue;
+			}
 
 			String content = message.getBody();
 			if (message.isFormatBBCode()) {
@@ -337,6 +354,10 @@ public class LinkCheckerUtil {
 		Collections.sort(sortedLayouts, new LayoutComparator());
 
 		for (Layout layout : allLayouts) {
+			
+			if (!hasPermissionView(groupId, layout.getModelClassName(), layout.getPrimaryKey(), themeDisplay)) {
+				continue;
+			}
 			
 			LayoutTypePortlet layoutTypePortlet = (LayoutTypePortlet) layout.getLayoutType();
 			
@@ -400,6 +421,10 @@ public class LinkCheckerUtil {
 
 		for (JournalArticle journalArticle : journalArticleList) {
 
+			if (!hasPermissionView(groupId, journalArticle.getModelClassName(), journalArticle.getPrimaryKey(), themeDisplay)) {
+				continue;
+			}
+
 			if (JournalArticleLocalServiceUtil.isLatestVersion(journalArticle.getGroupId(), journalArticle.getArticleId(), journalArticle.getVersion())) {
 
 				String content = JournalContentUtil.getContent(groupId, journalArticle.getArticleId(), null, null, languageId, themeDisplay);
@@ -413,7 +438,7 @@ public class LinkCheckerUtil {
 						editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.JOURNAL) + "articleId", journalArticle.getArticleId());
 
 						ContentLinks contentLinks = new ContentLinks();
-						contentLinks.setClassName(journalArticle.getClassName());
+						contentLinks.setClassName(journalArticle.getModelClassName());
 						contentLinks.setClassPK(journalArticle.getArticleId());
 						contentLinks.setContentTitle(journalArticle.getTitle(themeDisplay.getLocale()));
 						contentLinks.setContentEditLink(editLink);
@@ -466,6 +491,10 @@ public class LinkCheckerUtil {
 
 			if (content != null && wikiPage.getFormat().equals("html")) {
 
+				if (!hasPermissionView(groupId, wikiPage.getModelClassName(), wikiPage.getResourcePrimKey(), themeDisplay)) {
+					continue;
+				}
+
 				List<String> links = parseLinks(content, getLinks, getImages);
 
 				if (links.size() > 0) {
@@ -515,6 +544,36 @@ public class LinkCheckerUtil {
 		}
 
 		return url;
+	}
+
+	public static boolean hasPermission(long groupId, String name, String primKey, String actionId, ThemeDisplay themeDisplay) {
+		
+		PermissionChecker permissionChecker = themeDisplay.getPermissionChecker();
+		if (permissionChecker.hasPermission(
+				groupId, name, primKey, actionId)) {
+			
+			return true;
+		}
+		
+		return false;
+	}
+
+	public static boolean hasPermissionView(long groupId, ContentLinks contentLinks, ThemeDisplay themeDisplay) {
+		
+		return hasPermission(
+			groupId, contentLinks.getClassName(), contentLinks.getClassPK(), "VIEW", themeDisplay);
+	}
+
+	public static boolean hasPermissionView(long groupId, String name, String primKey, ThemeDisplay themeDisplay) {
+		
+		return hasPermission(
+			groupId, name, primKey, "VIEW", themeDisplay);
+	}
+
+	public static boolean hasPermissionView(long groupId, String name, long primKey, ThemeDisplay themeDisplay) {
+		
+		return hasPermission(
+			groupId, name, String.valueOf(primKey), "VIEW", themeDisplay);
 	}
 
 	public static boolean isPortalLink(String url, ThemeDisplay themeDisplay)
