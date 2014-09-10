@@ -5,6 +5,11 @@ String contentType = ParamUtil.getString(request, "content-type", "web-content")
 
 boolean checkLinks = ParamUtil.getBoolean(request, "check-links", true);
 boolean checkImages = ParamUtil.getBoolean(request, "check-images", false);
+boolean useBrowserAgent = ParamUtil.getBoolean(request, "use-browser-agent", true);
+
+String userAgent = "null";
+if (useBrowserAgent)
+	userAgent = request.getHeader("User-Agent");
 
 String checkType = LinkCheckerConstants.linkImagesLabel(checkLinks, checkImages);
 
@@ -160,7 +165,7 @@ boolean rowAlt = true;
 				} else {
 					encodelink=encodeURIComponent(node.attr('data-link'));
 					A.io.request(
-						'/api/jsonws/link-checker-portlet.linkcheckerurlstatus/get-response?url=' + encodelink,
+						'/api/jsonws/link-checker-portlet.linkcheckerurlstatus/get-response?url=' + encodelink + '&userAgent=' + userAgent,
 						{
 							dataType: 'json',
 							on: {
@@ -215,6 +220,7 @@ boolean rowAlt = true;
 	var progressBarCount = 0;
 	var progressBarPercent = 0;
 	var progressBar
+	var userAgent = '<%= HtmlUtil.escapeJS(userAgent) %>';
 	
 	function pbIncrement() {
 		++progressBarCount;

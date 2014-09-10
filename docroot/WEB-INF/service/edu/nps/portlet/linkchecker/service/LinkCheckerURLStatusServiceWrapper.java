@@ -64,16 +64,37 @@ public class LinkCheckerURLStatusServiceWrapper
 		return _linkCheckerURLStatusService.getResponse(url);
 	}
 
+	public java.lang.String[] getResponse(java.lang.String url,
+		java.lang.String userAgent)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _linkCheckerURLStatusService.getResponse(url, userAgent);
+	}
+
 	public java.lang.String getResponseCode(java.lang.String url)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _linkCheckerURLStatusService.getResponseCode(url);
 	}
 
+	public java.lang.String getResponseCode(java.lang.String url,
+		java.lang.String userAgent)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _linkCheckerURLStatusService.getResponseCode(url, userAgent);
+	}
+
 	public java.lang.String getResponseString(java.lang.String url)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _linkCheckerURLStatusService.getResponseString(url);
+	}
+
+	public java.lang.String getResponseString(java.lang.String url,
+		java.lang.String userAgent)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _linkCheckerURLStatusService.getResponseString(url, userAgent);
 	}
 
 	/**

@@ -68,6 +68,21 @@ public class LinkCheckerURLStatusServiceSoap {
 		}
 	}
 
+	public static java.lang.String[] getResponse(java.lang.String url,
+		java.lang.String userAgent) throws RemoteException {
+		try {
+			java.lang.String[] returnValue = LinkCheckerURLStatusServiceUtil.getResponse(url,
+					userAgent);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static java.lang.String getResponseCode(java.lang.String url)
 		throws RemoteException {
 		try {
@@ -82,10 +97,40 @@ public class LinkCheckerURLStatusServiceSoap {
 		}
 	}
 
+	public static java.lang.String getResponseCode(java.lang.String url,
+		java.lang.String userAgent) throws RemoteException {
+		try {
+			java.lang.String returnValue = LinkCheckerURLStatusServiceUtil.getResponseCode(url,
+					userAgent);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static java.lang.String getResponseString(java.lang.String url)
 		throws RemoteException {
 		try {
 			java.lang.String returnValue = LinkCheckerURLStatusServiceUtil.getResponseString(url);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static java.lang.String getResponseString(java.lang.String url,
+		java.lang.String userAgent) throws RemoteException {
+		try {
+			java.lang.String returnValue = LinkCheckerURLStatusServiceUtil.getResponseString(url,
+					userAgent);
 
 			return returnValue;
 		}

@@ -18,12 +18,12 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import edu.nps.portlet.linkchecker.service.base.LinkCheckerURLStatusLocalServiceBaseImpl;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.UnknownHostException;
 
 /**
@@ -49,6 +49,12 @@ public class LinkCheckerURLStatusLocalServiceImpl
 	 */
 
 	public String[] getResponse(String url)
+					throws PortalException, SystemException {
+
+		return getResponse(url, null);
+	}
+
+	public String[] getResponse(String url, String userAgent)
 		throws PortalException, SystemException {
 
 		String[] result = new String[3];
@@ -59,13 +65,14 @@ public class LinkCheckerURLStatusLocalServiceImpl
 		try {
 
 			URL urlObject = new URL(url);
-			URLConnection urlConnection = urlObject.openConnection();
-			urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.77.4 (KHTML, like Gecko) Version/7.0.5 Safari/537.77.4");
-		
+			
 			HttpURLConnection.setFollowRedirects(true);
-			HttpURLConnection httpURLConnection = (HttpURLConnection) urlConnection;
+			HttpURLConnection httpURLConnection = (HttpURLConnection) urlObject.openConnection();
 			httpURLConnection.setRequestMethod("HEAD");
-		
+			
+			if (Validator.isNotNull(userAgent))
+				httpURLConnection.setRequestProperty("User-Agent", userAgent);
+			
 			result[0] = String.valueOf(httpURLConnection.getResponseCode());
 			result[1] = httpURLConnection.getResponseMessage();
 			result[2] = httpURLConnection.getContentType();
@@ -91,10 +98,24 @@ public class LinkCheckerURLStatusLocalServiceImpl
 		return getResponse(url)[0];
 	}
 
+	public String getResponseCode(String url, String userAgent)
+		throws PortalException, SystemException {
+
+		return getResponse(url, userAgent)[0];
+	}
+
 	public String getResponseString(String url)
 		throws PortalException, SystemException {
 
 		String[] result = getResponse(url);
+		
+		return result[0] + " " + result[1];
+	}
+
+	public String getResponseString(String url, String userAgent)
+		throws PortalException, SystemException {
+
+		String[] result = getResponse(url, userAgent);
 		
 		return result[0] + " " + result[1];
 	}

@@ -35,13 +35,31 @@ public class LinkCheckerURLStatusLocalServiceClpInvoker {
 
 		_methodParameterTypes24 = new String[] { "java.lang.String" };
 
-		_methodName25 = "getResponseCode";
+		_methodName25 = "getResponse";
 
-		_methodParameterTypes25 = new String[] { "java.lang.String" };
+		_methodParameterTypes25 = new String[] {
+				"java.lang.String", "java.lang.String"
+			};
 
-		_methodName26 = "getResponseString";
+		_methodName26 = "getResponseCode";
 
 		_methodParameterTypes26 = new String[] { "java.lang.String" };
+
+		_methodName27 = "getResponseCode";
+
+		_methodParameterTypes27 = new String[] {
+				"java.lang.String", "java.lang.String"
+			};
+
+		_methodName28 = "getResponseString";
+
+		_methodParameterTypes28 = new String[] { "java.lang.String" };
+
+		_methodName29 = "getResponseString";
+
+		_methodParameterTypes29 = new String[] {
+				"java.lang.String", "java.lang.String"
+			};
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -63,12 +81,30 @@ public class LinkCheckerURLStatusLocalServiceClpInvoker {
 
 		if (_methodName25.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes25, parameterTypes)) {
-			return LinkCheckerURLStatusLocalServiceUtil.getResponseCode((java.lang.String)arguments[0]);
+			return LinkCheckerURLStatusLocalServiceUtil.getResponse((java.lang.String)arguments[0],
+				(java.lang.String)arguments[1]);
 		}
 
 		if (_methodName26.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes26, parameterTypes)) {
+			return LinkCheckerURLStatusLocalServiceUtil.getResponseCode((java.lang.String)arguments[0]);
+		}
+
+		if (_methodName27.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes27, parameterTypes)) {
+			return LinkCheckerURLStatusLocalServiceUtil.getResponseCode((java.lang.String)arguments[0],
+				(java.lang.String)arguments[1]);
+		}
+
+		if (_methodName28.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes28, parameterTypes)) {
 			return LinkCheckerURLStatusLocalServiceUtil.getResponseString((java.lang.String)arguments[0]);
+		}
+
+		if (_methodName29.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes29, parameterTypes)) {
+			return LinkCheckerURLStatusLocalServiceUtil.getResponseString((java.lang.String)arguments[0],
+				(java.lang.String)arguments[1]);
 		}
 
 		throw new UnsupportedOperationException();
@@ -84,4 +120,10 @@ public class LinkCheckerURLStatusLocalServiceClpInvoker {
 	private String[] _methodParameterTypes25;
 	private String _methodName26;
 	private String[] _methodParameterTypes26;
+	private String _methodName27;
+	private String[] _methodParameterTypes27;
+	private String _methodName28;
+	private String[] _methodParameterTypes28;
+	private String _methodName29;
+	private String[] _methodParameterTypes29;
 }

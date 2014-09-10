@@ -48,15 +48,33 @@ public class LinkCheckerURLStatusServiceImpl
 		return LinkCheckerURLStatusLocalServiceUtil.getResponse(url);
 	}
 
+	public String[] getResponse(String url, String userAgent)
+		throws PortalException, SystemException {
+
+		return LinkCheckerURLStatusLocalServiceUtil.getResponse(url, userAgent);
+	}
+
 	public String getResponseCode(String url)
 		throws PortalException, SystemException {
 
 		return LinkCheckerURLStatusLocalServiceUtil.getResponseCode(url);
 	}
 
+	public String getResponseCode(String url, String userAgent)
+		throws PortalException, SystemException {
+
+		return LinkCheckerURLStatusLocalServiceUtil.getResponseCode(url, userAgent);
+	}
+
 	public String getResponseString(String url)
 		throws PortalException, SystemException {
 
 		return LinkCheckerURLStatusLocalServiceUtil.getResponseString(url);
+	}
+
+	public String getResponseString(String url, String userAgent)
+		throws PortalException, SystemException {
+
+		return LinkCheckerURLStatusLocalServiceUtil.getResponseString(url, userAgent);
 	}
 }

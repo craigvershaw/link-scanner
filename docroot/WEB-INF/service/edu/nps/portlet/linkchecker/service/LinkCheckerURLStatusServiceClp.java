@@ -36,13 +36,31 @@ public class LinkCheckerURLStatusServiceClp
 
 		_methodParameterTypes3 = new String[] { "java.lang.String" };
 
-		_methodName4 = "getResponseCode";
+		_methodName4 = "getResponse";
 
-		_methodParameterTypes4 = new String[] { "java.lang.String" };
+		_methodParameterTypes4 = new String[] {
+				"java.lang.String", "java.lang.String"
+			};
 
-		_methodName5 = "getResponseString";
+		_methodName5 = "getResponseCode";
 
 		_methodParameterTypes5 = new String[] { "java.lang.String" };
+
+		_methodName6 = "getResponseCode";
+
+		_methodParameterTypes6 = new String[] {
+				"java.lang.String", "java.lang.String"
+			};
+
+		_methodName7 = "getResponseString";
+
+		_methodParameterTypes7 = new String[] { "java.lang.String" };
+
+		_methodName8 = "getResponseString";
+
+		_methodParameterTypes8 = new String[] {
+				"java.lang.String", "java.lang.String"
+			};
 	}
 
 	public java.lang.String getBeanIdentifier() {
@@ -125,7 +143,8 @@ public class LinkCheckerURLStatusServiceClp
 		return (java.lang.String[])ClpSerializer.translateOutput(returnObj);
 	}
 
-	public java.lang.String getResponseCode(java.lang.String url)
+	public java.lang.String[] getResponse(java.lang.String url,
+		java.lang.String userAgent)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
@@ -133,7 +152,82 @@ public class LinkCheckerURLStatusServiceClp
 		try {
 			returnObj = _invokableService.invokeMethod(_methodName4,
 					_methodParameterTypes4,
+					new Object[] {
+						ClpSerializer.translateInput(url),
+						
+					ClpSerializer.translateInput(userAgent)
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.lang.String[])ClpSerializer.translateOutput(returnObj);
+	}
+
+	public java.lang.String getResponseCode(java.lang.String url)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableService.invokeMethod(_methodName5,
+					_methodParameterTypes5,
 					new Object[] { ClpSerializer.translateInput(url) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.lang.String)ClpSerializer.translateOutput(returnObj);
+	}
+
+	public java.lang.String getResponseCode(java.lang.String url,
+		java.lang.String userAgent)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableService.invokeMethod(_methodName6,
+					_methodParameterTypes6,
+					new Object[] {
+						ClpSerializer.translateInput(url),
+						
+					ClpSerializer.translateInput(userAgent)
+					});
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -164,9 +258,47 @@ public class LinkCheckerURLStatusServiceClp
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableService.invokeMethod(_methodName5,
-					_methodParameterTypes5,
+			returnObj = _invokableService.invokeMethod(_methodName7,
+					_methodParameterTypes7,
 					new Object[] { ClpSerializer.translateInput(url) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.lang.String)ClpSerializer.translateOutput(returnObj);
+	}
+
+	public java.lang.String getResponseString(java.lang.String url,
+		java.lang.String userAgent)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableService.invokeMethod(_methodName8,
+					_methodParameterTypes8,
+					new Object[] {
+						ClpSerializer.translateInput(url),
+						
+					ClpSerializer.translateInput(userAgent)
+					});
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -202,4 +334,10 @@ public class LinkCheckerURLStatusServiceClp
 	private String[] _methodParameterTypes4;
 	private String _methodName5;
 	private String[] _methodParameterTypes5;
+	private String _methodName6;
+	private String[] _methodParameterTypes6;
+	private String _methodName7;
+	private String[] _methodParameterTypes7;
+	private String _methodName8;
+	private String[] _methodParameterTypes8;
 }

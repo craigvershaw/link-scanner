@@ -68,16 +68,37 @@ public class LinkCheckerURLStatusLocalServiceUtil {
 		return getService().getResponse(url);
 	}
 
+	public static java.lang.String[] getResponse(java.lang.String url,
+		java.lang.String userAgent)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().getResponse(url, userAgent);
+	}
+
 	public static java.lang.String getResponseCode(java.lang.String url)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService().getResponseCode(url);
 	}
 
+	public static java.lang.String getResponseCode(java.lang.String url,
+		java.lang.String userAgent)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().getResponseCode(url, userAgent);
+	}
+
 	public static java.lang.String getResponseString(java.lang.String url)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService().getResponseString(url);
+	}
+
+	public static java.lang.String getResponseString(java.lang.String url,
+		java.lang.String userAgent)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().getResponseString(url, userAgent);
 	}
 
 	public static void clearService() {
