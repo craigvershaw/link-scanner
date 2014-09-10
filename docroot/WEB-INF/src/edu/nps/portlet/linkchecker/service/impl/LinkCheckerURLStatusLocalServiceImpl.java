@@ -76,7 +76,23 @@ public class LinkCheckerURLStatusLocalServiceImpl
 			result[0] = String.valueOf(httpURLConnection.getResponseCode());
 			result[1] = httpURLConnection.getResponseMessage();
 			result[2] = httpURLConnection.getContentType();
-		} 
+			
+			if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_BAD_METHOD) {
+				
+				_log.debug("HTTP 405 Bad Method. Trying with GET: " + url);
+				
+				HttpURLConnection httpURLConnectionGet = (HttpURLConnection) urlObject.openConnection();
+				httpURLConnectionGet.setRequestMethod("GET");
+				httpURLConnectionGet.setUseCaches(false);
+				
+				if (Validator.isNotNull(userAgent))
+					httpURLConnectionGet.setRequestProperty("User-Agent", userAgent);
+				
+				result[0] = String.valueOf(httpURLConnectionGet.getResponseCode());
+				result[1] = httpURLConnectionGet.getResponseMessage();
+				result[2] = httpURLConnectionGet.getContentType();
+			}
+		}
 		catch(UnknownHostException unknownHostException){
 
 			_log.error("Unknown Host: " + url);
