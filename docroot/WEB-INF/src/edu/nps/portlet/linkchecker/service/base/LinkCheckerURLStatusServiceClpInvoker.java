@@ -1,15 +1,15 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
+ * The contents of this file are subject to the terms of the Liferay Enterprise
+ * Subscription License ("License"). You may not use this file except in
+ * compliance with the License. You can obtain a copy of the License by
+ * contacting Liferay, Inc. See the License for the specific language governing
+ * permissions and limitations under the License, including but not limited to
+ * distribution rights of the Software.
  *
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ *
+ *
  */
 
 package edu.nps.portlet.linkchecker.service.base;
@@ -19,90 +19,93 @@ import edu.nps.portlet.linkchecker.service.LinkCheckerURLStatusServiceUtil;
 import java.util.Arrays;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Craig Vershaw
+ * @generated
  */
 public class LinkCheckerURLStatusServiceClpInvoker {
 	public LinkCheckerURLStatusServiceClpInvoker() {
-		_methodName20 = "getBeanIdentifier";
+		_methodName16 = "getBeanIdentifier";
 
-		_methodParameterTypes20 = new String[] {  };
+		_methodParameterTypes16 = new String[] {  };
 
-		_methodName21 = "setBeanIdentifier";
+		_methodName17 = "setBeanIdentifier";
 
-		_methodParameterTypes21 = new String[] { "java.lang.String" };
+		_methodParameterTypes17 = new String[] { "java.lang.String" };
 
-		_methodName24 = "getResponse";
+		_methodName20 = "getResponse";
+
+		_methodParameterTypes20 = new String[] { "java.lang.String" };
+
+		_methodName21 = "getResponse";
+
+		_methodParameterTypes21 = new String[] {
+				"java.lang.String", "java.lang.String"
+			};
+
+		_methodName22 = "getResponseCode";
+
+		_methodParameterTypes22 = new String[] { "java.lang.String" };
+
+		_methodName23 = "getResponseCode";
+
+		_methodParameterTypes23 = new String[] {
+				"java.lang.String", "java.lang.String"
+			};
+
+		_methodName24 = "getResponseString";
 
 		_methodParameterTypes24 = new String[] { "java.lang.String" };
 
-		_methodName25 = "getResponse";
+		_methodName25 = "getResponseString";
 
 		_methodParameterTypes25 = new String[] {
-				"java.lang.String", "java.lang.String"
-			};
-
-		_methodName26 = "getResponseCode";
-
-		_methodParameterTypes26 = new String[] { "java.lang.String" };
-
-		_methodName27 = "getResponseCode";
-
-		_methodParameterTypes27 = new String[] {
-				"java.lang.String", "java.lang.String"
-			};
-
-		_methodName28 = "getResponseString";
-
-		_methodParameterTypes28 = new String[] { "java.lang.String" };
-
-		_methodName29 = "getResponseString";
-
-		_methodParameterTypes29 = new String[] {
 				"java.lang.String", "java.lang.String"
 			};
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
 		Object[] arguments) throws Throwable {
+		if (_methodName16.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes16, parameterTypes)) {
+			return LinkCheckerURLStatusServiceUtil.getBeanIdentifier();
+		}
+
+		if (_methodName17.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes17, parameterTypes)) {
+			LinkCheckerURLStatusServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
+
+			return null;
+		}
+
 		if (_methodName20.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes20, parameterTypes)) {
-			return LinkCheckerURLStatusServiceUtil.getBeanIdentifier();
+			return LinkCheckerURLStatusServiceUtil.getResponse((java.lang.String)arguments[0]);
 		}
 
 		if (_methodName21.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes21, parameterTypes)) {
-			LinkCheckerURLStatusServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
-		}
-
-		if (_methodName24.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes24, parameterTypes)) {
-			return LinkCheckerURLStatusServiceUtil.getResponse((java.lang.String)arguments[0]);
-		}
-
-		if (_methodName25.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes25, parameterTypes)) {
 			return LinkCheckerURLStatusServiceUtil.getResponse((java.lang.String)arguments[0],
 				(java.lang.String)arguments[1]);
 		}
 
-		if (_methodName26.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes26, parameterTypes)) {
+		if (_methodName22.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes22, parameterTypes)) {
 			return LinkCheckerURLStatusServiceUtil.getResponseCode((java.lang.String)arguments[0]);
 		}
 
-		if (_methodName27.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes27, parameterTypes)) {
+		if (_methodName23.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes23, parameterTypes)) {
 			return LinkCheckerURLStatusServiceUtil.getResponseCode((java.lang.String)arguments[0],
 				(java.lang.String)arguments[1]);
 		}
 
-		if (_methodName28.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes28, parameterTypes)) {
+		if (_methodName24.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes24, parameterTypes)) {
 			return LinkCheckerURLStatusServiceUtil.getResponseString((java.lang.String)arguments[0]);
 		}
 
-		if (_methodName29.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes29, parameterTypes)) {
+		if (_methodName25.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes25, parameterTypes)) {
 			return LinkCheckerURLStatusServiceUtil.getResponseString((java.lang.String)arguments[0],
 				(java.lang.String)arguments[1]);
 		}
@@ -110,20 +113,20 @@ public class LinkCheckerURLStatusServiceClpInvoker {
 		throw new UnsupportedOperationException();
 	}
 
+	private String _methodName16;
+	private String[] _methodParameterTypes16;
+	private String _methodName17;
+	private String[] _methodParameterTypes17;
 	private String _methodName20;
 	private String[] _methodParameterTypes20;
 	private String _methodName21;
 	private String[] _methodParameterTypes21;
+	private String _methodName22;
+	private String[] _methodParameterTypes22;
+	private String _methodName23;
+	private String[] _methodParameterTypes23;
 	private String _methodName24;
 	private String[] _methodParameterTypes24;
 	private String _methodName25;
 	private String[] _methodParameterTypes25;
-	private String _methodName26;
-	private String[] _methodParameterTypes26;
-	private String _methodName27;
-	private String[] _methodParameterTypes27;
-	private String _methodName28;
-	private String[] _methodParameterTypes28;
-	private String _methodName29;
-	private String[] _methodParameterTypes29;
 }

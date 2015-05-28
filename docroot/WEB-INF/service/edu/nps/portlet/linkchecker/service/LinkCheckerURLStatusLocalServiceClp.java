@@ -1,15 +1,15 @@
 /**
- * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
+ * Copyright (c) 2000-2013 Liferay, Inc. All rights reserved.
  *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
+ * The contents of this file are subject to the terms of the Liferay Enterprise
+ * Subscription License ("License"). You may not use this file except in
+ * compliance with the License. You can obtain a copy of the License by
+ * contacting Liferay, Inc. See the License for the specific language governing
+ * permissions and limitations under the License, including but not limited to
+ * distribution rights of the Software.
  *
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ *
+ *
  */
 
 package edu.nps.portlet.linkchecker.service;
@@ -18,6 +18,7 @@ import com.liferay.portal.service.InvokableLocalService;
 
 /**
  * @author Craig Vershaw
+ * @generated
  */
 public class LinkCheckerURLStatusLocalServiceClp
 	implements LinkCheckerURLStatusLocalService {
@@ -64,6 +65,7 @@ public class LinkCheckerURLStatusLocalServiceClp
 			};
 	}
 
+	@Override
 	public java.lang.String getBeanIdentifier() {
 		Object returnObj = null;
 
@@ -86,6 +88,7 @@ public class LinkCheckerURLStatusLocalServiceClp
 		return (java.lang.String)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	public void setBeanIdentifier(java.lang.String beanIdentifier) {
 		try {
 			_invokableLocalService.invokeMethod(_methodName1,
@@ -105,12 +108,14 @@ public class LinkCheckerURLStatusLocalServiceClp
 		}
 	}
 
+	@Override
 	public java.lang.Object invokeMethod(java.lang.String name,
 		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
 		throws java.lang.Throwable {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public java.lang.String[] getResponse(java.lang.String url)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
@@ -144,6 +149,7 @@ public class LinkCheckerURLStatusLocalServiceClp
 		return (java.lang.String[])ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	public java.lang.String[] getResponse(java.lang.String url,
 		java.lang.String userAgent)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -182,6 +188,7 @@ public class LinkCheckerURLStatusLocalServiceClp
 		return (java.lang.String[])ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	public java.lang.String getResponseCode(java.lang.String url)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
@@ -215,6 +222,7 @@ public class LinkCheckerURLStatusLocalServiceClp
 		return (java.lang.String)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	public java.lang.String getResponseCode(java.lang.String url,
 		java.lang.String userAgent)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -253,6 +261,7 @@ public class LinkCheckerURLStatusLocalServiceClp
 		return (java.lang.String)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	public java.lang.String getResponseString(java.lang.String url)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
@@ -286,6 +295,7 @@ public class LinkCheckerURLStatusLocalServiceClp
 		return (java.lang.String)ClpSerializer.translateOutput(returnObj);
 	}
 
+	@Override
 	public java.lang.String getResponseString(java.lang.String url,
 		java.lang.String userAgent)
 		throws com.liferay.portal.kernel.exception.PortalException,
