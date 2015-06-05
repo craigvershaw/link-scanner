@@ -1,40 +1,40 @@
-.link-checker-result, .link-checker-result-legend {
+.link-scanner-result, .link-scanner-result-legend {
 	background-repeat: no-repeat;
 	height: 20px;
 	padding-left: 24px;
 }
 
-.link-checker-result {
+.link-scanner-result {
 	float: left;
 }
 
-.link-checker-unchecked {
+.link-scanner-unchecked {
 	background-image: url('../images/unchecked.png');
 }
 
-.link-checker-success {
+.link-scanner-success {
 	background-image: url('../images/success.png');
 }
 
-.link-checker-redirect {
+.link-scanner-redirect {
 	background-image: url('../images/redirect.png');
 }
 
-.link-checker-error {
+.link-scanner-error {
 	background-image: url('../images/error.png');
 }
 
-#linkCheckerProgressBarContainer {
+#linkScannerProgressBarContainer {
 	clear: both;
 	max-width: 350px;
 }
 
-#linkCheckerOptions {
+#linkScannerOptions {
 	clear: both;
 	overflow: hidden;
 	height: auto;
 }
 
-.link-checker-legend {
+.link-scanner-legend {
 	float: right;
 }

@@ -1,7 +1,7 @@
-Liferay.Service.register("Liferay.Service.LinkChecker", "edu.nps.portlet.linkchecker.service", "link-checker-portlet");
+Liferay.Service.register("Liferay.Service.LinkScanner", "edu.nps.portlet.linkscanner.service", "link-scanner-portlet");
 
 Liferay.Service.registerClass(
-	Liferay.Service.LinkChecker, "LinkCheckerURLStatus",
+	Liferay.Service.LinkScanner, "LinkScannerURLStatus",
 	{
 		getResponse: true,
 		getResponseCode: true,

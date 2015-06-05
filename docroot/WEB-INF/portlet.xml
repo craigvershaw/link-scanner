@@ -3,10 +3,10 @@
 <portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" version="2.0">
 	
 	<portlet>
-		<portlet-name>linkchecker</portlet-name>
-		<display-name>Link Checker</display-name>
+		<portlet-name>linkscanner</portlet-name>
+		<display-name>Link Scanner</display-name>
 		<portlet-class>
-			edu.nps.portlet.linkchecker.DisplayPortlet
+			edu.nps.portlet.linkscanner.DisplayPortlet
 		</portlet-class>
 		<init-param>
 			<name>view-template</name>
@@ -31,8 +31,8 @@
 		</supports>
 		<resource-bundle>content.Language</resource-bundle>
 		<portlet-info>
-			<title>Link Checker</title>
-			<short-title>Display Portlet</short-title>
+			<title>Link Scanner</title>
+			<short-title>Link Scan</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>

@@ -1,57 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app id="WebApp_ID" version="2.4"
-	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-	<display-name>link-checker-portlet</display-name>
-
-	<filter>
-		<filter-name>Secure JSON Web Service Servlet Filter</filter-name>
-		<filter-class>com.liferay.portal.kernel.servlet.PortalClassLoaderFilter</filter-class>
-		<init-param>
-			<param-name>filter-class</param-name>
-			<param-value>com.liferay.portal.servlet.filters.secure.SecureFilter</param-value>
-		</init-param>
-		<init-param>
-			<param-name>basic_auth</param-name>
-			<param-value>true</param-value>
-		</init-param>
-		<init-param>
-			<param-name>portal_property_prefix</param-name>
-			<param-value>jsonws.servlet.</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>Secure JSON Web Service Servlet Filter</filter-name>
-		<url-pattern>/api/jsonws/*</url-pattern>
-	</filter-mapping>
-
-	<servlet>
-		<servlet-name>JSON Web Service Servlet</servlet-name>
-		<servlet-class>com.liferay.portal.kernel.servlet.PortalClassLoaderServlet</servlet-class>
-		<init-param>
-			<param-name>servlet-class</param-name>
-			<param-value>com.liferay.portal.jsonwebservice.JSONWebServiceServlet</param-value>
-		</init-param>
-		<load-on-startup>0</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>JSON Web Service Servlet</servlet-name>
-		<url-pattern>/api/jsonws/*</url-pattern>
-	</servlet-mapping>
-
-	<jsp-config>
-		<taglib>
-			<taglib-uri>http://java.sun.com/portlet_2_0</taglib-uri>
-			<taglib-location>/WEB-INF/tld/liferay-portlet.tld</taglib-location>
-		</taglib>
-		<taglib>
-			<taglib-uri>http://liferay.com/tld/aui</taglib-uri>
-			<taglib-location>/WEB-INF/tld/aui.tld</taglib-location>
-		</taglib>
-		<taglib>
-			<taglib-uri>http://java.sun.com/jsp/jstl/core</taglib-uri>
-			<taglib-location>/WEB-INF/tld/c.tld</taglib-location>
-		</taglib>
-	</jsp-config>
-
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:jsp="http://java.sun.com/xml/ns/javaee/jsp" xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd http://xmlns.jcp.org/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.4">
+  <display-name>link-scanner-portlet</display-name>
+  <filter>
+    <filter-name>Secure JSON Web Service Servlet Filter</filter-name>
+    <filter-class>com.liferay.portal.kernel.servlet.PortalClassLoaderFilter</filter-class>
+    <init-param>
+      <param-name>filter-class</param-name>
+      <param-value>com.liferay.portal.servlet.filters.secure.SecureFilter</param-value>
+    </init-param>
+    <init-param>
+      <param-name>basic_auth</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>portal_property_prefix</param-name>
+      <param-value>jsonws.servlet.</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>Secure JSON Web Service Servlet Filter</filter-name>
+    <url-pattern>/api/jsonws/*</url-pattern>
+  </filter-mapping>
+  <servlet>
+    <servlet-name>JSON Web Service Servlet</servlet-name>
+    <servlet-class>com.liferay.portal.kernel.servlet.PortalClassLoaderServlet</servlet-class>
+    <init-param>
+      <param-name>servlet-class</param-name>
+      <param-value>com.liferay.portal.jsonwebservice.JSONWebServiceServlet</param-value>
+    </init-param>
+    <load-on-startup>0</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>JSON Web Service Servlet</servlet-name>
+    <url-pattern>/api/jsonws/*</url-pattern>
+  </servlet-mapping>
+  <jsp-config>
+    <taglib>
+      <taglib-uri>http://java.sun.com/portlet_2_0</taglib-uri>
+      <taglib-location>/WEB-INF/tld/liferay-portlet.tld</taglib-location>
+    </taglib>
+    <taglib>
+      <taglib-uri>http://liferay.com/tld/aui</taglib-uri>
+      <taglib-location>/WEB-INF/tld/aui.tld</taglib-location>
+    </taglib>
+    <taglib>
+      <taglib-uri>http://java.sun.com/jsp/jstl/core</taglib-uri>
+      <taglib-location>/WEB-INF/tld/c.tld</taglib-location>
+    </taglib>
+  </jsp-config>
 </web-app>

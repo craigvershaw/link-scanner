@@ -4,6 +4,6 @@
 <display>
 	
 	<category name="category.tools">
-		<portlet id="linkchecker"></portlet>
+		<portlet id="linkscanner"></portlet>
 	</category>
 </display>
