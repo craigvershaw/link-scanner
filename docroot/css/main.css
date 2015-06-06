@@ -38,3 +38,11 @@
 .link-scanner-legend {
 	float: right;
 }
+
+.linkscanner-portlet .accordion-inner {
+	overflow: hidden;
+}
+
+tr.link-scanner-row-link td.col-2 {
+	padding-left: 12px;
+}
