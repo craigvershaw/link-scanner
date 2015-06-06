@@ -1,5 +1,11 @@
 package edu.nps.portlet.linkscanner.util;
 
+import com.liferay.calendar.model.Calendar;
+import com.liferay.calendar.model.CalendarBooking;
+import com.liferay.calendar.service.CalendarBookingLocalServiceUtil;
+import com.liferay.calendar.service.CalendarLocalServiceUtil;
+import com.liferay.calendar.util.comparator.CalendarNameComparator;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -24,8 +30,6 @@ import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
 import com.liferay.portlet.bookmarks.service.BookmarksEntryLocalServiceUtil;
-import com.liferay.portlet.calendar.model.CalEvent;
-import com.liferay.portlet.calendar.service.CalEventLocalServiceUtil;
 import com.liferay.portlet.journal.model.JournalArticle;
 import com.liferay.portlet.journalcontent.util.JournalContentUtil;
 import com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil;
@@ -85,7 +89,7 @@ public class LinkScannerUtil {
 		long plid = PortletKeys.PREFS_PLID_SHARED;
 
 		return PortletPreferencesLocalServiceUtil.getPreferences(
-			companyId, companyId, ownerType, plid, LINK_SCANNER_DISPLAY);
+			companyId, companyId, ownerType, plid, LinkScannerConstants.LINK_SCANNER_DISPLAY);
 
 	}
 
@@ -125,7 +129,7 @@ public class LinkScannerUtil {
 
 		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
 
-		List<BlogsEntry> blogsEntryList = BlogsEntryLocalServiceUtil.getGroupEntries(groupId, WorkflowConstants.STATUS_APPROVED, 0, -1);
+		List<BlogsEntry> blogsEntryList = BlogsEntryLocalServiceUtil.getGroupEntries(groupId, WorkflowConstants.STATUS_APPROVED, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
 		String editLink = themeDisplay.getURLControlPanel();
 		editLink = HttpUtil.setParameter(editLink, "p_p_id", PortletKeys.BLOGS_ADMIN);
@@ -181,7 +185,7 @@ public class LinkScannerUtil {
 
 		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
 
-		List<BookmarksEntry> bookmarksEntryList = BookmarksEntryLocalServiceUtil.getGroupEntries(groupId, 0, -1);
+		List<BookmarksEntry> bookmarksEntryList = BookmarksEntryLocalServiceUtil.getGroupEntries(groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
 		String editLink = themeDisplay.getURLControlPanel();
 		editLink = HttpUtil.setParameter(editLink, "p_p_id", PortletKeys.BOOKMARKS);
@@ -228,23 +232,27 @@ public class LinkScannerUtil {
 
 		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
 
-		List<CalEvent> calEventList = CalEventLocalServiceUtil.getEvents(groupId, "", 0, -1);
+		List<CalendarBooking> calendarBookingList = new ArrayList<CalendarBooking>();
+		List<Calendar> calendarList = CalendarLocalServiceUtil.search(themeDisplay.getCompanyId(), new long[] {groupId}, null, null, false, QueryUtil.ALL_POS, QueryUtil.ALL_POS, new CalendarNameComparator(true));
+
+		for (Calendar cal : calendarList) {
+			calendarBookingList.addAll(CalendarBookingLocalServiceUtil.getCalendarBookings(cal.getCalendarId()));
+		}
 
 		String editLink = themeDisplay.getURLControlPanel();
-		editLink = HttpUtil.setParameter(editLink, "p_p_id", PortletKeys.CALENDAR);
+		editLink = HttpUtil.setParameter(editLink, "p_p_id", LinkScannerConstants.CALENDAR);
 		editLink = HttpUtil.setParameter(editLink, "p_p_lifecycle", "0");
 		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
 		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.CALENDAR) + "struts_action", "/calendar/edit_event");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.CALENDAR) + "groupId", groupId);
+		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(LinkScannerConstants.CALENDAR) + "mvcPath", "/edit_calendar_booking.jsp");
 
-		for (CalEvent calEvent : calEventList) {
+		for (CalendarBooking calendarBooking : calendarBookingList) {
 			
-			if (!hasPermissionView(groupId, calEvent.getModelClassName(), calEvent.getPrimaryKey(), themeDisplay)) {
+			if (!hasPermissionView(groupId, calendarBooking.getModelClassName(), calendarBooking.getPrimaryKey(), themeDisplay)) {
 				continue;
 			}
 
-			String content = calEvent.getDescription();
+			String content = calendarBooking.getDescription(themeDisplay.getLocale());
 
 			if (content != null) {
 
@@ -252,16 +260,17 @@ public class LinkScannerUtil {
 
 				if (links.size() > 0) {
 
-					editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.CALENDAR) + "eventId", calEvent.getEventId());
+					editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(LinkScannerConstants.CALENDAR) + "calendarId", calendarBooking.getCalendarId());
+					editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(LinkScannerConstants.CALENDAR) + "calendarBookingId", calendarBooking.getCalendarBookingId());
 
 					ContentLinks contentLinks = new ContentLinks();
-					contentLinks.setClassName(calEvent.getModelClassName());
-					contentLinks.setClassPK(calEvent.getEventId());
-					contentLinks.setContentTitle(calEvent.getTitle());
+					contentLinks.setClassName(calendarBooking.getModelClassName());
+					contentLinks.setClassPK(calendarBooking.getCalendarBookingId());
+					contentLinks.setContentTitle(calendarBooking.getTitle(themeDisplay.getLocale()));
 					contentLinks.setContentEditLink(editLink);
-					contentLinks.setModifiedDate(calEvent.getModifiedDate());
+					contentLinks.setModifiedDate(calendarBooking.getModifiedDate());
 					
-					_log.debug("Extracting links from calendar event " + calEvent.getEventId() + " - " + calEvent.getTitle());
+					_log.debug("Extracting links from calendar event " + calendarBooking.getCalendarBookingId() + " - " + calendarBooking.getTitle(themeDisplay.getLocale()));
 					
 					for (String link : links) {
 
@@ -283,7 +292,7 @@ public class LinkScannerUtil {
 
 		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
 
-		List<MBMessage> messageList = MBMessageLocalServiceUtil.getGroupMessages(groupId, WorkflowConstants.STATUS_APPROVED, 0, -1);
+		List<MBMessage> messageList = MBMessageLocalServiceUtil.getGroupMessages(groupId, WorkflowConstants.STATUS_APPROVED, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
 		String editLink = themeDisplay.getURLControlPanel();
 		editLink = HttpUtil.setParameter(editLink, "p_p_id", PortletKeys.MESSAGE_BOARDS_ADMIN);
@@ -485,13 +494,13 @@ public class LinkScannerUtil {
 
 		for (WikiPage wikiPage : wikiPageList) {
 
+			if (!hasPermissionView(groupId, wikiPage.getModelClassName(), wikiPage.getResourcePrimKey(), themeDisplay)) {
+				continue;
+			}
+
 			String content = wikiPage.getContent();
 
 			if (content != null && wikiPage.getFormat().equals("html")) {
-
-				if (!hasPermissionView(groupId, wikiPage.getModelClassName(), wikiPage.getResourcePrimKey(), themeDisplay)) {
-					continue;
-				}
 
 				List<String> links = parseLinks(content, getLinks, getImages);
 
@@ -621,8 +630,6 @@ public class LinkScannerUtil {
 			}
 		}
 	}
-
-	private static final String LINK_SCANNER_DISPLAY = "linkscanner_WAR_linkscannerportlet";
 
 	private static Log _log = LogFactoryUtil.getLog(LinkScannerUtil.class);
 

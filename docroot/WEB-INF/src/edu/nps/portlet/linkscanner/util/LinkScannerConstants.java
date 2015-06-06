@@ -22,4 +22,8 @@ public class LinkScannerConstants {
 		}
 	}
 
+	public static final String LINK_SCANNER_DISPLAY = "linkscanner_WAR_linkscannerportlet";
+
+	public static final String CALENDAR = "1_WAR_calendarportlet";
+
 }
