@@ -100,7 +100,7 @@ boolean rowAlt = true;
 		}
 		else {
 %>
-							<%= contentLinks.getContentTitle() %>
+							<%= HtmlUtil.escape(contentLinks.getContentTitle()) %>
 <%
 		}
 %>
@@ -117,7 +117,7 @@ boolean rowAlt = true;
 							<div class="link-scanner-result link-scanner-unchecked" title="" data-link="<%= link %>" data-isportal="<%= LinkScannerUtil.isPortalLink(link, themeDisplay) %>"></div>
 						</td>
 						<td class="align-left col-2 last valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-title-link">
-							<a href="<%= link %>" target="_blank" class="link-scanner-link"><%= linkShort %></a>
+							<a href="<%= link %>" target="_blank" class="link-scanner-link"><%= HtmlUtil.escape(linkShort) %></a>
 						</td>
 					</tr>
 <%
