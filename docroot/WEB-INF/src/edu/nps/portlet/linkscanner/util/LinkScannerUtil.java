@@ -11,7 +11,9 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.parsers.bbcode.BBCodeTranslatorUtil;
-import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
+import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -53,6 +55,8 @@ import java.util.List;
 import java.util.Set;
 
 import javax.portlet.PortletPreferences;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
 
 public class LinkScannerUtil {
 
@@ -93,36 +97,48 @@ public class LinkScannerUtil {
 
 	}
 
-	public static List<ContentLinks> getContentLinks(String contentType, long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
+	public static List<ContentLinks> getContentLinks(
+			String contentType, long groupId, 
+			LiferayPortletRequest liferayPortletRequest,
+			LiferayPortletResponse liferayPortletResponse,
+			ThemeDisplay themeDisplay, 
+			boolean getLinks,
+			boolean getImages)
 		throws Exception {
 
 		if (contentType.equals("blog-entries")) {
-			return getBlogLinks(groupId, languageId, themeDisplay, getLinks, getImages);
+			return getBlogLinks(groupId, liferayPortletRequest, liferayPortletResponse, themeDisplay, getLinks, getImages);
 		}
 		else if (contentType.equals("bookmarks")) {
-			return getBookmarkLinks(groupId, languageId, themeDisplay, getLinks, getImages);
+			return getBookmarkLinks(groupId, liferayPortletRequest, liferayPortletResponse, themeDisplay, getLinks, getImages);
 		}
 		else if (contentType.equals("calendar-events")) {
-			return getCalendarLinks(groupId, languageId, themeDisplay, getLinks, getImages);
+			return getCalendarLinks(groupId, liferayPortletRequest, liferayPortletResponse, themeDisplay, getLinks, getImages);
 		}
 		else if (contentType.equals("message-board-messages")) {
-			return getMBMessageLinks(groupId, languageId, themeDisplay, getLinks, getImages);
+			return getMBMessageLinks(groupId, liferayPortletRequest, liferayPortletResponse, themeDisplay, getLinks, getImages);
 		}
 		else if (contentType.equals("rss-portlet-subscriptions")) {
-			return getRSSPortletLinks(groupId, languageId, themeDisplay, getLinks, getImages);
+			return getRSSPortletLinks(groupId, liferayPortletRequest, liferayPortletResponse, themeDisplay, getLinks, getImages);
 		}
 		else if (contentType.equals("web-content")) {
-			return getWebContentLinks(groupId, languageId, themeDisplay, getLinks, getImages);
+			return getWebContentLinks(groupId, liferayPortletRequest, liferayPortletResponse, themeDisplay, getLinks, getImages);
 		}
 		else if (contentType.equals("wiki-pages")) {
-			return getWikiContentLinks(groupId, languageId, themeDisplay, getLinks, getImages);
+			return getWikiContentLinks(groupId, liferayPortletRequest, liferayPortletResponse, themeDisplay, getLinks, getImages);
 		}
 		else {
 			return null;
 		}
 	}
 
-	public static List<ContentLinks> getBlogLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
+	public static List<ContentLinks> getBlogLinks(
+			long groupId, 
+			LiferayPortletRequest liferayPortletRequest,
+			LiferayPortletResponse liferayPortletResponse,
+			ThemeDisplay themeDisplay, 
+			boolean getLinks,
+			boolean getImages)
 		throws Exception {
 
 		_log.info("getBlogLinks for groupId " + String.valueOf(groupId));
@@ -131,13 +147,13 @@ public class LinkScannerUtil {
 
 		List<BlogsEntry> blogsEntryList = BlogsEntryLocalServiceUtil.getGroupEntries(groupId, WorkflowConstants.STATUS_APPROVED, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
-		String editLink = themeDisplay.getURLControlPanel();
-		editLink = HttpUtil.setParameter(editLink, "p_p_id", PortletKeys.BLOGS_ADMIN);
-		editLink = HttpUtil.setParameter(editLink, "p_p_lifecycle", "0");
-		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
-		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BLOGS_ADMIN) + "struts_action", "/blogs_admin/edit_entry");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BLOGS_ADMIN) + "groupId", groupId);
+		PortletURL portletURL = liferayPortletResponse.createLiferayPortletURL(
+				PortalUtil.getControlPanelPlid(liferayPortletRequest), 
+				PortletKeys.BLOGS_ADMIN,
+				PortletRequest.RENDER_PHASE);
+
+		portletURL.setWindowState(LiferayWindowState.POP_UP);
+		portletURL.setParameter("struts_action", "/blogs_admin/edit_entry");
 
 		for (BlogsEntry blogsEntry : blogsEntryList) {
 			
@@ -153,13 +169,13 @@ public class LinkScannerUtil {
 
 				if (links.size() > 0) {
 
-					editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BLOGS_ADMIN) + "entryId", blogsEntry.getEntryId());
+					portletURL.setParameter("entryId", String.valueOf(blogsEntry.getEntryId()));
 
 					ContentLinks contentLinks = new ContentLinks();
 					contentLinks.setClassName(blogsEntry.getModelClassName());
 					contentLinks.setClassPK(blogsEntry.getEntryId());
 					contentLinks.setContentTitle(blogsEntry.getTitle());
-					contentLinks.setContentEditLink(editLink);
+					contentLinks.setContentEditLink(portletURL.toString());
 					contentLinks.setModifiedDate(blogsEntry.getModifiedDate());
 					contentLinks.setStatus(blogsEntry.getStatus());
 					
@@ -178,7 +194,13 @@ public class LinkScannerUtil {
 		return contentLinksList;
 	}
 
-	public static List<ContentLinks> getBookmarkLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
+	public static List<ContentLinks> getBookmarkLinks(
+			long groupId, 
+			LiferayPortletRequest liferayPortletRequest,
+			LiferayPortletResponse liferayPortletResponse,
+			ThemeDisplay themeDisplay, 
+			boolean getLinks,
+			boolean getImages)
 		throws Exception {
 
 		_log.info("getBookmarkLinks for groupId " + String.valueOf(groupId));
@@ -187,13 +209,13 @@ public class LinkScannerUtil {
 
 		List<BookmarksEntry> bookmarksEntryList = BookmarksEntryLocalServiceUtil.getGroupEntries(groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
-		String editLink = themeDisplay.getURLControlPanel();
-		editLink = HttpUtil.setParameter(editLink, "p_p_id", PortletKeys.BOOKMARKS);
-		editLink = HttpUtil.setParameter(editLink, "p_p_lifecycle", "0");
-		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
-		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BOOKMARKS) + "struts_action", "/bookmarks/edit_entry");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BOOKMARKS) + "groupId", groupId);
+		PortletURL portletURL = liferayPortletResponse.createLiferayPortletURL(
+				PortalUtil.getControlPanelPlid(liferayPortletRequest), 
+				PortletKeys.BOOKMARKS,
+				PortletRequest.RENDER_PHASE);
+
+		portletURL.setWindowState(LiferayWindowState.POP_UP);
+		portletURL.setParameter("struts_action", "/bookmarks/edit_entry");
 
 		for (BookmarksEntry bookmarksEntry : bookmarksEntryList) {
 			
@@ -205,13 +227,14 @@ public class LinkScannerUtil {
 
 			if (link != null) {
 
-				editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.BOOKMARKS) + "entryId", bookmarksEntry.getEntryId());
+				portletURL.setParameter("folderId", String.valueOf(bookmarksEntry.getFolderId()));
+				portletURL.setParameter("entryId", String.valueOf(bookmarksEntry.getEntryId()));
 
 				ContentLinks contentLinks = new ContentLinks();
 				contentLinks.setClassName(bookmarksEntry.getModelClassName());
 				contentLinks.setClassPK(bookmarksEntry.getEntryId());
 				contentLinks.setContentTitle(bookmarksEntry.getName());
-				contentLinks.setContentEditLink(editLink);
+				contentLinks.setContentEditLink(portletURL.toString());
 				contentLinks.setModifiedDate(bookmarksEntry.getModifiedDate());
 				
 				_log.debug("Extracting link from bookmarks entry " + bookmarksEntry.getEntryId() + " - " + bookmarksEntry.getName());
@@ -225,7 +248,13 @@ public class LinkScannerUtil {
 		return contentLinksList;
 	}
 
-	public static List<ContentLinks> getCalendarLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
+	public static List<ContentLinks> getCalendarLinks(
+			long groupId, 
+			LiferayPortletRequest liferayPortletRequest,
+			LiferayPortletResponse liferayPortletResponse,
+			ThemeDisplay themeDisplay, 
+			boolean getLinks,
+			boolean getImages)
 		throws Exception {
 
 		_log.info("getCalendarLinks for groupId " + String.valueOf(groupId));
@@ -239,12 +268,13 @@ public class LinkScannerUtil {
 			calendarBookingList.addAll(CalendarBookingLocalServiceUtil.getCalendarBookings(cal.getCalendarId()));
 		}
 
-		String editLink = themeDisplay.getURLControlPanel();
-		editLink = HttpUtil.setParameter(editLink, "p_p_id", LinkScannerConstants.CALENDAR);
-		editLink = HttpUtil.setParameter(editLink, "p_p_lifecycle", "0");
-		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
-		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(LinkScannerConstants.CALENDAR) + "mvcPath", "/edit_calendar_booking.jsp");
+		PortletURL portletURL = liferayPortletResponse.createLiferayPortletURL(
+				PortalUtil.getControlPanelPlid(liferayPortletRequest), 
+				LinkScannerConstants.CALENDAR,
+				PortletRequest.RENDER_PHASE);
+
+		portletURL.setWindowState(LiferayWindowState.POP_UP);
+		portletURL.setParameter("mvcPath", "/edit_calendar_booking.jsp");
 
 		for (CalendarBooking calendarBooking : calendarBookingList) {
 			
@@ -260,14 +290,13 @@ public class LinkScannerUtil {
 
 				if (links.size() > 0) {
 
-					editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(LinkScannerConstants.CALENDAR) + "calendarId", calendarBooking.getCalendarId());
-					editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(LinkScannerConstants.CALENDAR) + "calendarBookingId", calendarBooking.getCalendarBookingId());
+					portletURL.setParameter("calendarBookingId",String.valueOf(calendarBooking.getCalendarBookingId()));
 
 					ContentLinks contentLinks = new ContentLinks();
 					contentLinks.setClassName(calendarBooking.getModelClassName());
 					contentLinks.setClassPK(calendarBooking.getCalendarBookingId());
 					contentLinks.setContentTitle(calendarBooking.getTitle(themeDisplay.getLocale()));
-					contentLinks.setContentEditLink(editLink);
+					contentLinks.setContentEditLink(portletURL.toString());
 					contentLinks.setModifiedDate(calendarBooking.getModifiedDate());
 					
 					_log.debug("Extracting links from calendar event " + calendarBooking.getCalendarBookingId() + " - " + calendarBooking.getTitle(themeDisplay.getLocale()));
@@ -285,7 +314,13 @@ public class LinkScannerUtil {
 		return contentLinksList;
 	}
 
-	public static List<ContentLinks> getMBMessageLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
+	public static List<ContentLinks> getMBMessageLinks(
+			long groupId, 
+			LiferayPortletRequest liferayPortletRequest,
+			LiferayPortletResponse liferayPortletResponse,
+			ThemeDisplay themeDisplay, 
+			boolean getLinks,
+			boolean getImages)
 		throws Exception {
 
 		_log.info("getMBMessageLinks for groupId " + String.valueOf(groupId));
@@ -294,13 +329,13 @@ public class LinkScannerUtil {
 
 		List<MBMessage> messageList = MBMessageLocalServiceUtil.getGroupMessages(groupId, WorkflowConstants.STATUS_APPROVED, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
-		String editLink = themeDisplay.getURLControlPanel();
-		editLink = HttpUtil.setParameter(editLink, "p_p_id", PortletKeys.MESSAGE_BOARDS_ADMIN);
-		editLink = HttpUtil.setParameter(editLink, "p_p_lifecycle", "0");
-		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
-		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.MESSAGE_BOARDS_ADMIN) + "struts_action", "/message_boards_admin/edit_message");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.MESSAGE_BOARDS_ADMIN) + "groupId", groupId);
+		PortletURL portletURL = liferayPortletResponse.createLiferayPortletURL(
+				PortalUtil.getControlPanelPlid(liferayPortletRequest), 
+				PortletKeys.MESSAGE_BOARDS,
+				PortletRequest.RENDER_PHASE);
+
+		portletURL.setWindowState(LiferayWindowState.POP_UP);
+		portletURL.setParameter("struts_action", "/message_boards/edit_message");
 
 		for (MBMessage message : messageList) {
 			
@@ -320,13 +355,13 @@ public class LinkScannerUtil {
 
 				if (links.size() > 0) {
 
-					editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.MESSAGE_BOARDS_ADMIN) + "messageId", message.getMessageId());
+					portletURL.setParameter("messageId", String.valueOf(message.getMessageId()));
 
 					ContentLinks contentLinks = new ContentLinks();
 					contentLinks.setClassName(message.getModelClassName());
 					contentLinks.setClassPK(message.getMessageId());
 					contentLinks.setContentTitle(message.getSubject());
-					contentLinks.setContentEditLink(editLink);
+					contentLinks.setContentEditLink(portletURL.toString());
 					contentLinks.setModifiedDate(message.getModifiedDate());
 					contentLinks.setStatus(message.getStatus());
 					
@@ -345,7 +380,13 @@ public class LinkScannerUtil {
 		return contentLinksList;
 	}
 
-	public static List<ContentLinks> getRSSPortletLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
+	public static List<ContentLinks> getRSSPortletLinks(
+			long groupId, 
+			LiferayPortletRequest liferayPortletRequest,
+			LiferayPortletResponse liferayPortletResponse,
+			ThemeDisplay themeDisplay, 
+			boolean getLinks,
+			boolean getImages)
 		throws Exception {
 
 		_log.info("getRSSPortletLinks for groupId " + String.valueOf(groupId));
@@ -409,7 +450,13 @@ public class LinkScannerUtil {
 		return contentLinksList;
 	}
 
-	public static List<ContentLinks> getWebContentLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
+	public static List<ContentLinks> getWebContentLinks(
+			long groupId, 
+			LiferayPortletRequest liferayPortletRequest,
+			LiferayPortletResponse liferayPortletResponse,
+			ThemeDisplay themeDisplay, 
+			boolean getLinks,
+			boolean getImages)
 		throws Exception {
 
 		_log.info("getWebContentLinks for groupId " + String.valueOf(groupId));
@@ -418,13 +465,13 @@ public class LinkScannerUtil {
 
 		List<JournalArticle> journalArticleList = JournalArticleLocalServiceUtil.getArticles(groupId);
 
-		String editLink = themeDisplay.getURLControlPanel();
-		editLink = HttpUtil.setParameter(editLink, "p_p_id", PortletKeys.JOURNAL);
-		editLink = HttpUtil.setParameter(editLink, "p_p_lifecycle", "0");
-		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
-		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.JOURNAL) + "struts_action", "/journal/edit_article");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.JOURNAL) + "groupId", groupId);
+		PortletURL portletURL = liferayPortletResponse.createLiferayPortletURL(
+				PortalUtil.getControlPanelPlid(liferayPortletRequest), 
+				PortletKeys.JOURNAL,
+				PortletRequest.RENDER_PHASE);
+
+		portletURL.setWindowState(LiferayWindowState.POP_UP);
+		portletURL.setParameter("struts_action", "/journal/edit_article");
 
 		for (JournalArticle journalArticle : journalArticleList) {
 
@@ -434,7 +481,7 @@ public class LinkScannerUtil {
 
 			if (JournalArticleLocalServiceUtil.isLatestVersion(journalArticle.getGroupId(), journalArticle.getArticleId(), journalArticle.getVersion())) {
 
-				String content = JournalContentUtil.getContent(groupId, journalArticle.getArticleId(), null, null, languageId, themeDisplay);
+				String content = JournalContentUtil.getContent(groupId, journalArticle.getArticleId(), null, null, themeDisplay.getLanguageId(), themeDisplay);
 
 				if (content != null) {
 
@@ -442,13 +489,15 @@ public class LinkScannerUtil {
 
 					if (links.size() > 0) {
 
-						editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.JOURNAL) + "articleId", journalArticle.getArticleId());
+						portletURL.setParameter("groupId", String.valueOf(journalArticle.getGroupId()));
+						portletURL.setParameter("articleId", journalArticle.getArticleId());
+						portletURL.setParameter("version", String.valueOf(journalArticle.getVersion()));
 
 						ContentLinks contentLinks = new ContentLinks();
 						contentLinks.setClassName(journalArticle.getModelClassName());
 						contentLinks.setClassPK(journalArticle.getArticleId());
 						contentLinks.setContentTitle(journalArticle.getTitle(themeDisplay.getLocale()));
-						contentLinks.setContentEditLink(editLink);
+						contentLinks.setContentEditLink(portletURL.toString());
 						contentLinks.setModifiedDate(journalArticle.getModifiedDate());
 						contentLinks.setStatus(journalArticle.getStatus());
 						
@@ -468,7 +517,13 @@ public class LinkScannerUtil {
 		return contentLinksList;
 	}
 
-	public static List<ContentLinks> getWikiContentLinks(long groupId, String languageId, ThemeDisplay themeDisplay, boolean getLinks, boolean getImages)
+	public static List<ContentLinks> getWikiContentLinks(
+			long groupId, 
+			LiferayPortletRequest liferayPortletRequest,
+			LiferayPortletResponse liferayPortletResponse,
+			ThemeDisplay themeDisplay, 
+			boolean getLinks,
+			boolean getImages)
 		throws Exception {
 
 		_log.info("getWikiContentLinks for groupId " + String.valueOf(groupId));
@@ -484,13 +539,13 @@ public class LinkScannerUtil {
 			wikiPageList.addAll(WikiPageLocalServiceUtil.getPages(wikiNode.getNodeId(), true, 0, WikiPageLocalServiceUtil.getPagesCount(wikiNode.getNodeId(), true)));
 		}
 
-		String editLink = themeDisplay.getURLControlPanel();
-		editLink = HttpUtil.setParameter(editLink, "p_p_id", PortletKeys.WIKI_ADMIN);
-		editLink = HttpUtil.setParameter(editLink, "p_p_lifecycle", "0");
-		editLink = HttpUtil.setParameter(editLink, "p_p_state", "maximized");
-		editLink = HttpUtil.setParameter(editLink, "p_p_mode", "view");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.WIKI_ADMIN) + "struts_action", "/wiki_admin/edit_page");
-		editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.WIKI_ADMIN) + "groupId", groupId);
+		PortletURL portletURL = liferayPortletResponse.createLiferayPortletURL(
+				PortalUtil.getControlPanelPlid(liferayPortletRequest), 
+				PortletKeys.WIKI,
+				PortletRequest.RENDER_PHASE);
+
+		portletURL.setWindowState(LiferayWindowState.POP_UP);
+		portletURL.setParameter("struts_action", "/wiki/edit_page");
 
 		for (WikiPage wikiPage : wikiPageList) {
 
@@ -506,14 +561,14 @@ public class LinkScannerUtil {
 
 				if (links.size() > 0) {
 
-					editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.WIKI_ADMIN) + "nodeId", wikiPage.getNodeId());
-					editLink = HttpUtil.setParameter(editLink, PortalUtil.getPortletNamespace(PortletKeys.WIKI_ADMIN) + "title", wikiPage.getTitle());
+					portletURL.setParameter("nodeId", String.valueOf(wikiPage.getNodeId()));
+					portletURL.setParameter("title", wikiPage.getTitle());
 
 					ContentLinks contentLinks = new ContentLinks();
 					contentLinks.setClassName(wikiPage.getModelClassName());
 					contentLinks.setClassPK(String.valueOf(wikiPage.getPageId()));
 					contentLinks.setContentTitle(wikiPage.getTitle());
-					contentLinks.setContentEditLink(editLink);
+					contentLinks.setContentEditLink(portletURL.toString());
 					contentLinks.setModifiedDate(wikiPage.getModifiedDate());
 					contentLinks.setStatus(wikiPage.getStatus());
 					
