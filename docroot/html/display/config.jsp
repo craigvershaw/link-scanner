@@ -13,7 +13,6 @@ String[] portalURLPrefixesAdd = LinkScannerUtil.getPortalURLPrefixesAdd(company.
 
 <aui:form action="<%= configurationURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveConfiguration();" %>'>
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />
-	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 
 	<h4><liferay-ui:message key="add-prefix-instructions" /></h4>
 
