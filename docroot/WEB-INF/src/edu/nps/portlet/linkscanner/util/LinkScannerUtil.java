@@ -141,7 +141,7 @@ public class LinkScannerUtil {
 			boolean getImages)
 		throws Exception {
 
-		_log.info("getBlogLinks for groupId " + String.valueOf(groupId));
+		_log.debug("getBlogLinks for groupId " + String.valueOf(groupId));
 
 		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
 
@@ -203,7 +203,7 @@ public class LinkScannerUtil {
 			boolean getImages)
 		throws Exception {
 
-		_log.info("getBookmarkLinks for groupId " + String.valueOf(groupId));
+		_log.debug("getBookmarkLinks for groupId " + String.valueOf(groupId));
 
 		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
 
@@ -257,7 +257,7 @@ public class LinkScannerUtil {
 			boolean getImages)
 		throws Exception {
 
-		_log.info("getCalendarLinks for groupId " + String.valueOf(groupId));
+		_log.debug("getCalendarLinks for groupId " + String.valueOf(groupId));
 
 		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
 
@@ -323,7 +323,7 @@ public class LinkScannerUtil {
 			boolean getImages)
 		throws Exception {
 
-		_log.info("getMBMessageLinks for groupId " + String.valueOf(groupId));
+		_log.debug("getMBMessageLinks for groupId " + String.valueOf(groupId));
 
 		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
 
@@ -389,7 +389,7 @@ public class LinkScannerUtil {
 			boolean getImages)
 		throws Exception {
 
-		_log.info("getRSSPortletLinks for groupId " + String.valueOf(groupId));
+		_log.debug("getRSSPortletLinks for groupId " + String.valueOf(groupId));
 
 		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
 
@@ -459,7 +459,7 @@ public class LinkScannerUtil {
 			boolean getImages)
 		throws Exception {
 
-		_log.info("getWebContentLinks for groupId " + String.valueOf(groupId));
+		_log.debug("getWebContentLinks for groupId " + String.valueOf(groupId));
 
 		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
 
@@ -526,7 +526,7 @@ public class LinkScannerUtil {
 			boolean getImages)
 		throws Exception {
 
-		_log.info("getWikiContentLinks for groupId " + String.valueOf(groupId));
+		_log.debug("getWikiContentLinks for groupId " + String.valueOf(groupId));
 
 		List<ContentLinks> contentLinksList = new ArrayList<ContentLinks>();
 
