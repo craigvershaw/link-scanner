@@ -63,17 +63,19 @@ boolean rowAlt = true;
 	</div>
 
 	<div id="<portlet:namespace/>SearchContainer" class="yui3-widget aui-component aui-searchcontainer">
-		<div class="results-grid aui-searchcontainer-content" id="<portlet:namespace/>SearchContainerSearchContainer">
-			<table class="taglib-search-iterator" data-searchcontainerid="<portlet:namespace/>SearchContainer">
-				<tbody>
+		<div class="results-grid aui-searchcontainer-content searchcontainer-content" id="<portlet:namespace/>SearchContainerSearchContainer">
+			<table class="table table-bordered table-hover table-striped taglib-search-iterator" data-searchcontainerid="<portlet:namespace/>SearchContainer">
+				<thead class="table-columns">
 					<tr class="portlet-section-header results-header">
-						<th class="col-1 first" id="<portlet:namespace/>SearchContainer_col-result">
+						<th class="col-1 first table-first-header" id="<portlet:namespace/>SearchContainer_col-result" width="1%">
 							<span class="result-column-name">Result</span>
 						</th>
-						<th class="col-2 last" id="<portlet:namespace/>SearchContainer_col-title-link">
+						<th class="col-2 last table-last-header" id="<portlet:namespace/>SearchContainer_col-title-link">
 							<span class="result-column-name">Title / Link(s)</span>
 						</th>
 					</tr>
+				</thead>
+				<tbody class="table-data">
 
 <%
 	for (ContentLinks contentLinks : contentLinksList) {
@@ -81,8 +83,8 @@ boolean rowAlt = true;
 		rowAlt = !rowAlt;
 %>
 					<tr class="link-scanner-row-content results-row <%= (rowAlt?"portlet-section-alternate alt":"portlet-section-body") %>">
-						<td class="align-left col-1 first valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-result">&nbsp;</td>
-						<td class="align-left col-2 last valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-title-link">
+						<td class="table-cell align-left col-1 first valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-result">&nbsp;</td>
+						<td class="table-cell align-left col-2 last valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-title-link">
 <%
 		if (contentType.equals("rss-portlet-subscriptions") || 
 			permissionChecker.hasPermission(
@@ -118,10 +120,10 @@ boolean rowAlt = true;
 			String linkShort = (link.length() > 150 ? link.substring(0, 150) + "..." : link);
 %>
 					<tr class="link-scanner-row-link results-row <%= (rowAlt?"portlet-section-alternate alt":"portlet-section-body") %>">
-						<td class="align-left col-1 first valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-result">
+						<td class="table-cell align-left col-1 first valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-result">
 							<div class="link-scanner-result link-scanner-unchecked" title="" data-link="<%= link %>" data-isportal="<%= LinkScannerUtil.isPortalLink(link, themeDisplay) %>"></div>
 						</td>
-						<td class="align-left col-2 last valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-title-link">
+						<td class="table-cell align-left col-2 last valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-title-link">
 							<a href="<%= link %>" target="_blank" class="link-scanner-link"><%= HtmlUtil.escape(linkShort) %></a>
 						</td>
 					</tr>
