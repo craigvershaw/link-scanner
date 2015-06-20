@@ -118,6 +118,15 @@ boolean rowAlt = true;
 
 			rowAlt = !rowAlt;
 			String linkShort = (link.length() > 150 ? link.substring(0, 150) + "..." : link);
+
+			if (link.startsWith("//")) {
+				try {
+					link = themeDisplay.getURLPortal().substring(0, themeDisplay.getURLPortal().indexOf("//")) + link;
+				}
+				catch (Exception e) {
+					
+				}
+			}
 %>
 					<tr class="link-scanner-row-link results-row <%= (rowAlt?"portlet-section-alternate alt":"portlet-section-body") %>">
 						<td class="table-cell align-left col-1 first valign-middle" colspan="1" headers="<portlet:namespace/>SearchContainer_col-result">

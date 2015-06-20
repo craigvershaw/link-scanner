@@ -67,7 +67,6 @@ public class LinkScannerUtil {
 		portalURLPrefixes.add(themeDisplay.getURLPortal());
 		portalURLPrefixes.add("/");
 		portalURLPrefixes.add(".");
-		// TODO: protocol relative urls that begin with //
 
 		String[] portalURLPrefixesAdd = getPortalURLPrefixesAdd(themeDisplay.getCompanyId());
 
@@ -641,9 +640,13 @@ public class LinkScannerUtil {
 	public static boolean isPortalLink(String url, ThemeDisplay themeDisplay)
 		throws SystemException, PortalException {
 
+		if (url.startsWith("//" + themeDisplay.getServerName()))
+			return true;
+
 		for (String portalURLPrefix : getPortalURLPrefixes(themeDisplay)) {
 
-			if (url.startsWith(portalURLPrefix))
+			if (url.startsWith(portalURLPrefix) && 
+					(!url.startsWith("//") || portalURLPrefix.startsWith("//")))
 				return true;
 		}
 		
