@@ -1,8 +1,8 @@
 <%@ include file="/html/init.jsp" %>
 
 <%
-Set<String> portalURLPrefixes = LinkCheckerUtil.getPortalURLPrefixes(themeDisplay);
-String[] portalURLPrefixesAdd = LinkCheckerUtil.getPortalURLPrefixesAdd(company.getCompanyId());
+Set<String> portalURLPrefixes = LinkScannerUtil.getPortalURLPrefixes(themeDisplay);
+String[] portalURLPrefixesAdd = LinkScannerUtil.getPortalURLPrefixesAdd(company.getCompanyId());
 %>
 
 <liferay-portlet:renderURL portletConfiguration="true" var="portletURL">
@@ -13,7 +13,6 @@ String[] portalURLPrefixesAdd = LinkCheckerUtil.getPortalURLPrefixesAdd(company.
 
 <aui:form action="<%= configurationURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveConfiguration();" %>'>
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />
-	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 
 	<h4><liferay-ui:message key="add-prefix-instructions" /></h4>
 

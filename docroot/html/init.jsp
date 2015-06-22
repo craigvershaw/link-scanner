@@ -28,9 +28,9 @@ page import="com.liferay.portal.util.PortletKeys" %><%@
 page import="com.liferay.portlet.PortalPreferences" %><%@
 page import="com.liferay.portlet.PortletPreferencesFactoryUtil" %>
 
-<%@ page import="edu.nps.portlet.linkchecker.util.ContentLinks" %><%@
-page import="edu.nps.portlet.linkchecker.util.LinkCheckerConstants" %><%@
-page import="edu.nps.portlet.linkchecker.util.LinkCheckerUtil" %>
+<%@ page import="edu.nps.portlet.linkscanner.util.ContentLinks" %><%@
+page import="edu.nps.portlet.linkscanner.util.LinkScannerConstants" %><%@
+page import="edu.nps.portlet.linkscanner.util.LinkScannerUtil" %>
 
 <%@ page import="java.util.ArrayList" %><%@
 page import="java.util.Arrays" %><%@

@@ -4,7 +4,7 @@
 	Select the content type to process for links.</p>
 
 <liferay-portlet:renderURL varImpl="extractLinksURL">
-	<portlet:param name="mvcPath" value='<%= templatePath + "checker.jsp" %>' />
+	<portlet:param name="mvcPath" value='<%= templatePath + "scanner.jsp" %>' />
 </liferay-portlet:renderURL>
 
 <aui:form action="<%= extractLinksURL %>" method="get" name="fm">
@@ -23,8 +23,8 @@
 				<aui:option label="wiki-pages" />
 			</aui:select>
 
-			<aui:input inlineLabel="right" name="check-links" type="checkbox" checked="<%= true %>" />
-			<aui:input inlineLabel="right" name="check-images" type="checkbox" />
+			<aui:input inlineLabel="right" name="scan-links" type="checkbox" checked="<%= true %>" />
+			<aui:input inlineLabel="right" name="scan-images" type="checkbox" />
 		</aui:field-wrapper>
 
 		<aui:field-wrapper label="options">

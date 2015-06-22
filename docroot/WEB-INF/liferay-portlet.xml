@@ -4,9 +4,9 @@
 <liferay-portlet-app>
 	
 	<portlet>
-		<portlet-name>linkchecker</portlet-name>
+		<portlet-name>linkscanner</portlet-name>
 		<icon>/icon.png</icon>
-		<configuration-action-class>edu.nps.portlet.linkchecker.ConfigurationActionImpl</configuration-action-class>
+		<configuration-action-class>edu.nps.portlet.linkscanner.ConfigurationActionImpl</configuration-action-class>
 		<control-panel-entry-category>content</control-panel-entry-category>
 		<control-panel-entry-weight>80</control-panel-entry-weight>
 		<preferences-company-wide>true</preferences-company-wide>
@@ -15,7 +15,7 @@
 		<scopeable>true</scopeable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
-		<css-class-wrapper>linkchecker-portlet</css-class-wrapper>
+		<css-class-wrapper>linkscanner-portlet</css-class-wrapper>
 	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
