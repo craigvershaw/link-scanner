@@ -90,18 +90,13 @@ boolean rowAlt = true;
 			permissionChecker.hasPermission(
 			scopeGroupId, contentLinks.getClassName(),
 			contentLinks.getClassPK(), "UPDATE")) {
-
-			String editUrl = contentType.equals("rss-portlet-subscriptions") ? contentLinks.getContentEditLink() : 
-				"javascript:Liferay.Util.openWindow({id: '" + renderResponse.getNamespace() + "editAsset', " + 
-				"title: '" + LanguageUtil.format(pageContext, "edit-x", HtmlUtil.escape(contentLinks.getContentTitle())) + "', " + 
-				"uri:'" + HtmlUtil.escapeURL(contentLinks.getContentEditLink()) + "'});";
 %>
 							<liferay-ui:icon
 								image="edit"
 								label="<%= true %>"
 								message="<%= contentLinks.getContentTitle() %>"
-								target='<%= contentType.equals("rss-portlet-subscriptions") ? "_blank" : null %>'
-								url="<%= editUrl %>"
+								target="_blank"
+								url="<%= contentLinks.getContentEditLink() %>"
 							/>
 <%
 		}

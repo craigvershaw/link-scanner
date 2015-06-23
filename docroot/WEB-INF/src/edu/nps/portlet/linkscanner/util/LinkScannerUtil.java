@@ -153,7 +153,7 @@ public class LinkScannerUtil {
 				PortletKeys.BLOGS_ADMIN,
 				PortletRequest.RENDER_PHASE);
 
-		portletURL.setWindowState(LiferayWindowState.POP_UP);
+		portletURL.setWindowState(LiferayWindowState.NORMAL);
 		portletURL.setParameter("struts_action", "/blogs_admin/edit_entry");
 
 		for (BlogsEntry blogsEntry : blogsEntryList) {
@@ -215,7 +215,7 @@ public class LinkScannerUtil {
 				PortletKeys.BOOKMARKS,
 				PortletRequest.RENDER_PHASE);
 
-		portletURL.setWindowState(LiferayWindowState.POP_UP);
+		portletURL.setWindowState(LiferayWindowState.NORMAL);
 		portletURL.setParameter("struts_action", "/bookmarks/edit_entry");
 
 		for (BookmarksEntry bookmarksEntry : bookmarksEntryList) {
@@ -269,7 +269,7 @@ public class LinkScannerUtil {
 				PortletKeys.CALENDAR,
 				PortletRequest.RENDER_PHASE);
 
-		portletURL.setWindowState(LiferayWindowState.POP_UP);
+		portletURL.setWindowState(LiferayWindowState.NORMAL);
 		portletURL.setParameter("struts_action", "/calendar/edit_event");
 
 		for (CalEvent calEvent : calEventList) {
@@ -330,7 +330,7 @@ public class LinkScannerUtil {
 				PortletKeys.MESSAGE_BOARDS,
 				PortletRequest.RENDER_PHASE);
 
-		portletURL.setWindowState(LiferayWindowState.POP_UP);
+		portletURL.setWindowState(LiferayWindowState.NORMAL);
 		portletURL.setParameter("struts_action", "/message_boards/edit_message");
 
 		for (MBMessage message : messageList) {
@@ -466,7 +466,7 @@ public class LinkScannerUtil {
 				PortletKeys.JOURNAL,
 				PortletRequest.RENDER_PHASE);
 
-		portletURL.setWindowState(LiferayWindowState.POP_UP);
+		portletURL.setWindowState(LiferayWindowState.NORMAL);
 		portletURL.setParameter("struts_action", "/journal/edit_article");
 
 		for (JournalArticle journalArticle : journalArticleList) {
@@ -540,7 +540,7 @@ public class LinkScannerUtil {
 				PortletKeys.WIKI,
 				PortletRequest.RENDER_PHASE);
 
-		portletURL.setWindowState(LiferayWindowState.POP_UP);
+		portletURL.setWindowState(LiferayWindowState.NORMAL);
 		portletURL.setParameter("struts_action", "/wiki/edit_page");
 
 		for (WikiPage wikiPage : wikiPageList) {
