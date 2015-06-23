@@ -246,7 +246,7 @@ boolean rowAlt = true;
 		function(A) {
 			
 			var tipresult = new A.Tooltip({
-				trigger: '.link-checker-result',
+				trigger: '.link-scanner-result',
 				align: { points: [ 'bl', 'tr' ] },
 				title: true
 			})
