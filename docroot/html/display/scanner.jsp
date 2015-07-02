@@ -181,7 +181,7 @@ boolean rowAlt = true;
 				} else {
 					encodelink=encodeURIComponent(node.attr('data-link'));
 					A.io.request(
-						'/api/jsonws/link-scanner-portlet.linkscannerurlstatus/get-response?url=' + encodelink + '&userAgent=' + userAgent,
+						'/api/jsonws/link-scanner-portlet.linkscannerurlstatus/get-response?p_auth=' + Liferay.authToken + '&url=' + encodelink + '&userAgent=' + userAgent,
 						{
 							dataType: 'json',
 							on: {
