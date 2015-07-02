@@ -10,7 +10,7 @@ After Link Scanner has been installed, you will find it located in the Control P
 1. Choose whether to scan for links, images or both.
 1. You also have the option to use the current web browser's user agent when testing links. Disabling this option is not recommended as it makes link scanner less reliable.
 
-Click Scan Links to begin. Link Scanner will look for links and/or images within the current Liferay site for the chosen content type.
+Click Process to begin. Link Scanner will look for links and/or images within the current Liferay site for the chosen content type.
 
 ![WebScreenShot](https://raw.githubusercontent.com/craigvershaw/link-scanner/master/docroot/images/screenshots/link-scanner-screen07-web.jpg)
 
