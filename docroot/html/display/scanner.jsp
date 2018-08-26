@@ -157,6 +157,7 @@ boolean rowAlt = true;
 
 			links.each(function (node) {
 				if (node.attr('data-isportal') == 'true') {
+					console.log('Testing portal link: ' + node.attr('data-link'));
 					A.io.request(
 						node.attr('data-link'),
 						{
@@ -180,6 +181,7 @@ boolean rowAlt = true;
 					);
 				} else {
 					encodelink=encodeURIComponent(node.attr('data-link'));
+					console.log('Testing external link: ' + node.attr('data-link'));
 					A.io.request(
 						'/api/jsonws/link-scanner-portlet.linkscannerurlstatus/get-response?p_auth=' + Liferay.authToken + '&url=' + encodelink + '&userAgent=' + userAgent,
 						{

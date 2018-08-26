@@ -156,7 +156,8 @@ public class LinkScannerUtil {
 
 		for (BlogsEntry blogsEntry : blogsEntryList) {
 			
-			if (!hasPermissionView(groupId, blogsEntry.getModelClassName(), blogsEntry.getPrimaryKey(), themeDisplay)) {
+			if (blogsEntry.isInTrash() ||
+					!hasPermissionView(groupId, blogsEntry.getModelClassName(), blogsEntry.getPrimaryKey(), themeDisplay)) {
 				continue;
 			}
 
@@ -218,7 +219,8 @@ public class LinkScannerUtil {
 
 		for (BookmarksEntry bookmarksEntry : bookmarksEntryList) {
 			
-			if (!hasPermissionView(groupId, bookmarksEntry.getModelClassName(), bookmarksEntry.getPrimaryKey(), themeDisplay)) {
+			if (bookmarksEntry.isInTrash() ||
+					!hasPermissionView(groupId, bookmarksEntry.getModelClassName(), bookmarksEntry.getPrimaryKey(), themeDisplay)) {
 				continue;
 			}
 
@@ -277,7 +279,8 @@ public class LinkScannerUtil {
 
 		for (CalendarBooking calendarBooking : calendarBookingList) {
 			
-			if (!hasPermissionView(groupId, calendarBooking.getModelClassName(), calendarBooking.getPrimaryKey(), themeDisplay)) {
+			if (calendarBooking.isInTrash() ||
+					!hasPermissionView(groupId, calendarBooking.getModelClassName(), calendarBooking.getPrimaryKey(), themeDisplay)) {
 				continue;
 			}
 
@@ -338,7 +341,8 @@ public class LinkScannerUtil {
 
 		for (MBMessage message : messageList) {
 			
-			if (!hasPermissionView(groupId, message.getModelClassName(), message.getPrimaryKey(), themeDisplay)) {
+			if (message.isInTrash() ||
+					!hasPermissionView(groupId, message.getModelClassName(), message.getPrimaryKey(), themeDisplay)) {
 				continue;
 			}
 
@@ -474,7 +478,8 @@ public class LinkScannerUtil {
 
 		for (JournalArticle journalArticle : journalArticleList) {
 
-			if (!hasPermissionView(groupId, journalArticle.getModelClassName(), journalArticle.getPrimaryKey(), themeDisplay)) {
+			if (journalArticle.isInTrash() ||
+					!hasPermissionView(groupId, journalArticle.getModelClassName(), journalArticle.getPrimaryKey(), themeDisplay)) {
 				continue;
 			}
 
@@ -548,7 +553,8 @@ public class LinkScannerUtil {
 
 		for (WikiPage wikiPage : wikiPageList) {
 
-			if (!hasPermissionView(groupId, wikiPage.getModelClassName(), wikiPage.getResourcePrimKey(), themeDisplay)) {
+			if (wikiPage.isInTrash() ||
+					!hasPermissionView(groupId, wikiPage.getModelClassName(), wikiPage.getResourcePrimKey(), themeDisplay)) {
 				continue;
 			}
 
